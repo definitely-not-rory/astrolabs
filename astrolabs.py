@@ -192,6 +192,9 @@ def aphot_cg_cas_testing():
 
     
 
+'test'
+
+
 fittingtesting()
 
 '''
