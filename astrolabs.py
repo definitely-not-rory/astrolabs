@@ -190,10 +190,6 @@ def aphot_cg_cas_testing():
     print(str(mags[0])+' +/- '+str(errors[0]))
     print(str(mags[1])+' +/- '+str(errors[1]))
 
-    
-
-'test'
-
 
 fittingtesting()
 
