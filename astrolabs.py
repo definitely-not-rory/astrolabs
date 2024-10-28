@@ -15,7 +15,7 @@ def get_data(obj,use_mean):
             df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
-            meanmags=np.append(meanmags,np.mean(arrays[:,1]))
+            meanmags=np.append(meanmags,np.median(arrays[:,1]))
             meanerrors=np.append(meanerrors,np.std(arrays[:,2])/len(arrays[:,2]))
             for point in arrays: #iterate through extracted data and store in correct places
                 times.append(point[0])
@@ -81,8 +81,11 @@ def raw_plot(obj):
     plt.show()
 
 #CURVE FITTING
-def fitting(obj):
-    times, mags, errors =get_data(obj,True) #get data for given object
+def fitting(obj,use_mean,newmethod):
+    if newmethod==True:
+        times,mags,errors=convert_to_times_mags(obj)
+    else:
+        times, mags, errors =get_data(obj,use_mean) #get data for given object
 
     initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
     
@@ -117,38 +120,31 @@ def fitting(obj):
     sawpopt_errs = np.sqrt(np.diag(sawcov)) #calculate errors
     sinpopt_errs = np.sqrt(np.diag(sincov))
 
-    print(sinpopt[1])
-    print(sawpopt[1])
-
-    print('Sawtooth Freq: '+str(sawpopt[1]))
-    print('Sin Period: '+str(sinpopt[1])+'\n')
-
-    print('Sawtooth Period: ' +str(2*np.pi/sawpopt[1])+ ' +/- '+str(sawpopt_errs[1]/sawpopt[1]**2)) #print calculated periods with errors
-    print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(sinpopt_errs[1]/sinpopt[1]**2))
-
     def chi_squared(model_params, model, x_data, y_data, y_err):
         return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
     
     sin_chi_val=chi_squared(sinpopt, sin_function, times, mags, errors)
     reduced_sin_chi=sin_chi_val/len(times)
+
+    saw_chi_val=chi_squared(sawpopt, sawtooth_function, times, mags, errors)
+    reduced_saw_chi=saw_chi_val/len(times)
+
+    raw_vs_average=''
+    aphot_vs_hand=''
+
+    if use_mean==True:
+        raw_vs_average='Time Averaged'
     
-    print('Reduced Chi Squared: '+str(reduced_sin_chi))
+    if newmethod==False:
+        aphot_vs_hand='from aphot.py'
+
+    print('\n~~~ '+raw_vs_average+'Frequency and Period Data'+aphot_vs_hand+' ~~~')
+    print('\n ~~~ Sawtooth Model ~~~\nSawtooth Frequency: '+str(sawpopt[1]))
+    print('Sawtooth Period: ' +str(2*np.pi/sawpopt[1])+ ' +/- '+str(sawpopt_errs[1]/sawpopt[1]**2)) #print calculated periods with errors
+    print('Sawtooth Reduced Chi Squared: '+str(reduced_saw_chi)+'\n')
+
+    print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1]))
+    print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(sinpopt_errs[1]/sinpopt[1]**2))
+    print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi))
 
     plt.show()
-
-
-'''
-
-chi squared values
-
-errors from chi+1
-
-check data errors
-
-test at single points rather than every exposure
-
-average and sd of errors
-
-include errors in ZP
-
-'''
