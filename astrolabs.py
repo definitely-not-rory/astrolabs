@@ -3,12 +3,14 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import astropy as astro
+from astropy import time as time
 import matplotlib.pyplot as plt
 import os
 import math
+import re
 
 #DATA PROCESSING
-def get_data(obj):
+def get_data(obj,use_mean):
     dates =os.listdir(obj+'/') #get list of available nights for given object
     times=[] #storage for data
     mags=[]
@@ -26,7 +28,45 @@ def get_data(obj):
     times-=times[0] #normalise time values to begin at 0
     return times, mags, errors
 
+#POST DATA COLLECTION CHANGES DATA PROCESSING
+def get_data_new(obj):
+    df=pd.read_csv(obj+'/data.txt',delimiter=' ',header=None)
+    arrays=df.to_numpy()
+    times=arrays[:,0]
+    counts=arrays[:,1]
+    return times, counts
 
+def calculate_magnitude(counts,zpt):
+    mags=[]
+    
+    for i in range(len(counts)):
+        mags=np.append(mags,zpt[i]-2.5*np.log10(counts[i]))
+    return mags
+
+
+def convert_to_times_mags(obj):
+    times, counts = get_data_new(obj)
+    modified_times=[]
+    for stringtime in times:
+        objecttime=time.Time(stringtime, format='isot',scale='utc')
+        modified_times.append(objecttime.mjd)
+    zeros = []
+    err_zeros = []
+    with open(obj+'/zeros.txt','r') as readfile:
+        for line in readfile:
+            line = line.split()
+            zeros = np.append(zeros,line[2])
+            err_zeros = np.append(err_zeros,line[5])
+
+    zeros=np.float64(zeros)
+    err_zeros=np.float64(err_zeros)
+    mags=calculate_magnitude(counts,zeros)
+    errors=[]
+    for i in range(len(counts)):
+        errors=np.append(errors,np.sqrt(err_zeros[i]**2+(2.5*(np.sqrt(counts[i]))/(np.log(10)*counts[i]))**2))
+    modified_times-=modified_times[0]
+    return modified_times, mags, errors
+    
 #INITIAL PLOTS
 def plot(objs):
     rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
@@ -51,7 +91,7 @@ def plot(objs):
                 xaxiscounter+=1 #if in middle of row, progress to next x position
 
         for obj in objs:
-            times, mags, errors =get_data(obj) #get data from given object
+            times, mags, errors =convert_to_times_mags(obj) #get data from given object
             markers,bars,caps=ax[ycounter][xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=2) #generate figure
 
             [bar.set_alpha(0.5) for bar in bars] #set error bars to translucent
@@ -77,7 +117,7 @@ def plot(objs):
             xaxiscounter+=1
 
         for obj in objs:
-            times, mags, errors =get_data(obj)
+            times, mags, errors =convert_to_times_mags(obj)
             markers,bars,caps=ax[xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
             [bar.set_alpha(0.5) for bar in bars]
             [cap.set_alpha(0.5) for cap in caps]
@@ -86,6 +126,11 @@ def plot(objs):
             xcounter+=1
     
     plt.show()
+
+
+#MEAN TESTING
+def means_plot():
+    pass
 
 #CURVE FITTING
 def fitting(obj):
@@ -133,11 +178,15 @@ def fitting(obj):
     print('Sawtooth Period: ' +str(2*np.pi/sawpopt[1])+ ' +/- '+str(sawpopt_errs[1]/sawpopt[1]**2)) #print calculated periods with errors
     print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(sinpopt_errs[1]/sinpopt[1]**2))
 
+    def chi_squared(model_params, model, x_data, y_data, y_err):
+        return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
+    
+    sin_chi_val=chi_squared(sinpopt, sin_function, times, mags, errors)
+    reduced_sin_chi=sin_chi_val/len(times)
+    
+    print('Reduced Chi Squared: '+str(reduced_sin_chi))
+
     plt.show()
-
-
-objs=['ch_cas','cg_cas','sz_cas','cp_cep','cy_cas']
-
 
 def basic_plot(obj):
     fig, ax=plt.subplots()
@@ -151,11 +200,14 @@ def basic_plot(obj):
     plt.title(obj)
     plt.show()
 
+
+objs=['sz_cas_test']
+
+fitting('sz_cas')
+
 def fittingtesting():
     times, mags, errors = get_data('cg_cas')
     times, mags, errors = times[2:-7], mags[2:-7], errors[2:-7]
-
-
 
     plt.figure()
     plt.scatter(times, mags)
@@ -191,8 +243,7 @@ def aphot_cg_cas_testing():
     print('\n ~~~ Magnitude Ratios ~~~\nad0101.fits: '+str(mag_ratios[0])+'\nad0102.fits: '+str(mag_ratios[1])+'\n')
     print('\n ~~~ Error Ratios ~~~\nad0101.fits: '+str(err_ratios[0])+'\nad0102.fits: '+str(err_ratios[1])+'\n')
 
-aphot_cg_cas_testing()
-basic_plot('cg_cas')
+#aphot_cg_cas_testing()
 
 
 
