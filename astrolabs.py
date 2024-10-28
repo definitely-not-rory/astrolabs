@@ -138,7 +138,6 @@ def fitting(obj):
 
 objs=['ch_cas','cg_cas','sz_cas','cp_cep','cy_cas']
 
-#plot(objs)
 
 def basic_plot(obj):
     fig, ax=plt.subplots()
@@ -151,10 +150,6 @@ def basic_plot(obj):
     fig.set_figwidth(7.5)
     plt.title(obj)
     plt.show()
-
-
-
-#basic_plot('cg_cas')
 
 def fittingtesting():
     times, mags, errors = get_data('cg_cas')
@@ -177,21 +172,29 @@ def fittingtesting():
 
     fitted_params=[popt[0],popt[1]]
     print(fitted_params)
-    def chi_squared(model_params, model, x_data, y_data, y_err):
-        chi_sq = np.sum(((y_data - model(x_data, model_params))/y_err)**2)
-        return chi_sq
-    
-
-    print(chi_squared(fitted_params,linear,times,mags,errors))
-    
 
 def aphot_cg_cas_testing():
     times, mags, errors = get_data('cg_cas')
-    print(str(mags[0])+' +/- '+str(errors[0]))
-    print(str(mags[1])+' +/- '+str(errors[1]))
+    hand_values= [11.758,11.725]
+    hand_errors=[0.019,0.018]
+    differences=[abs(hand_values[0]-mags[0]),abs(hand_values[1]-mags[1])]
+    error_differences=[abs(hand_errors[0]-errors[0]),abs(hand_errors[1]-errors[1])]
+    difference_in_points=[abs(mags[0]-mags[1]),abs(hand_values[0]-hand_values[1])]
+    mag_ratios=[mags[0]/hand_values[0],mags[1]/hand_values[1]]
+    err_ratios=[errors[0]/hand_errors[0],errors[1]/hand_errors[1]]
+
+    print('\n~~~~~ ad0101.fits ~~~~~\naphot: '+str(mags[0])+' +/- '+str(errors[0])+'\nby hand: '+str(hand_values[0])+' +/- '+str(hand_errors[0]))
+    print('\n~~~~~ ad0102.fits ~~~~~\naphot: '+str(mags[1])+' +/- '+str(errors[1])+'\nby hand: '+str(hand_values[1])+' +/- '+str(hand_errors[1]))
+    print('\n~~~ Difference in Magnitudes ~~~\nad0101.fits: '+str(differences[0])+'\nad0102.fits: '+str(differences[1]))
+    print('\n~~~ Difference in Errors ~~~\nad0101.fits: '+str(error_differences[0])+'\nad0102.fits: '+str(error_differences[1]))
+    print('\n~~~ Overall Point Separation ~~~\naphot: '+str(difference_in_points[0])+'\nBy Hand: '+str(difference_in_points[1])+'\n')
+    print('\n ~~~ Magnitude Ratios ~~~\nad0101.fits: '+str(mag_ratios[0])+'\nad0102.fits: '+str(mag_ratios[1])+'\n')
+    print('\n ~~~ Error Ratios ~~~\nad0101.fits: '+str(err_ratios[0])+'\nad0102.fits: '+str(err_ratios[1])+'\n')
+
+aphot_cg_cas_testing()
+basic_plot('cg_cas')
 
 
-fittingtesting()
 
 '''
 
@@ -206,13 +209,5 @@ test at single points rather than every exposure
 average and sd of errors
 
 include errors in ZP
-
-do github
-
-CG CAS CHECK:
-
-ad101.fits = 11.758 +/- 0.019
-ad102.fits = 11.725 +/- 0.018
-
 
 '''
