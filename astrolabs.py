@@ -1,13 +1,5 @@
 #IMPORTS
-import numpy as np
-import pandas as pd
-import scipy as sp
-import astropy as astro
-from astropy import time as time
-import matplotlib.pyplot as plt
-import os
-import math
-import re
+from imports import *
 
 #DATA PROCESSING
 def get_data(obj,use_mean):
@@ -15,10 +7,16 @@ def get_data(obj,use_mean):
     times=[] #storage for data
     mags=[]
     errors=[]
+    meantimes=[]
+    meanmags=[]
+    meanerrors=[]
     try: #try/except statement to ignore non-directory files/photometry files
         for date in dates: #iterate through available data
             df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
+            meantimes=np.append(meantimes,np.mean(arrays[:,0]))
+            meanmags=np.append(meanmags,np.mean(arrays[:,1]))
+            meanerrors=np.append(meanerrors,np.std(arrays[:,2])/len(arrays[:,2]))
             for point in arrays: #iterate through extracted data and store in correct places
                 times.append(point[0])
                 mags.append(point[1])
@@ -26,7 +24,10 @@ def get_data(obj,use_mean):
     except:
         pass #ignore all non-directories
     times-=times[0] #normalise time values to begin at 0
-    return times, mags, errors
+    if use_mean==True:
+        return meantimes,meanmags,meanerrors
+    else:
+        return times, mags, errors
 
 #POST DATA COLLECTION CHANGES DATA PROCESSING
 def get_data_new(obj):
@@ -42,7 +43,6 @@ def calculate_magnitude(counts,zpt):
     for i in range(len(counts)):
         mags=np.append(mags,zpt[i]-2.5*np.log10(counts[i]))
     return mags
-
 
 def convert_to_times_mags(obj):
     times, counts = get_data_new(obj)
@@ -68,73 +68,21 @@ def convert_to_times_mags(obj):
     return modified_times, mags, errors
     
 #INITIAL PLOTS
-def plot(objs):
-    rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
-    if rows>1: #Since plots < 3 are stored in a 1D array, need to handle plotting separately
-        figure, ax = plt.subplots(rows,3)  #generate subplots
-        figure.set_figwidth(15)
-        figure.set_figheight(rows*10) #setting figure dimensions
-
-        xcounter=0 #counters for iterations
-        ycounter=0
-
-        xaxiscounter=0
-        yaxiscounter=0
-
-        for axis in range(rows*3):
-            if (xaxiscounter+1)+yaxiscounter*3>len(objs): #check if 'integer' value is within necessary list of objects
-                ax[yaxiscounter][xaxiscounter].set_visible(False) #hide axis if plot is unecessary
-            if xaxiscounter==2: #resetting x position if at end of the row. increment y position to next row
-                xaxiscounter=0
-                yaxiscounter+=1
-            else:
-                xaxiscounter+=1 #if in middle of row, progress to next x position
-
-        for obj in objs:
-            times, mags, errors =convert_to_times_mags(obj) #get data from given object
-            markers,bars,caps=ax[ycounter][xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=2) #generate figure
-
-            [bar.set_alpha(0.5) for bar in bars] #set error bars to translucent
-            [cap.set_alpha(0.5) for cap in caps] 
-
-            ax[ycounter][xcounter].set(xlabel='Time (days)',ylabel='Magnitude') #label with axes labels and relevant object name
-            ax[ycounter][xcounter].set_title(obj)
-
-            if xcounter==2: #same resetting of x and y positions for row iteration as above
-                xcounter=0
-                ycounter+=1
-            else:
-                xcounter+=1
-    else:
-        figure, ax = plt.subplots(rows,3)  #identical code without y positions for 1 row plots
-        figure.set_figwidth(60) 
-        
-        xcounter=0
-        xaxiscounter=0
-        for axis in ax:
-            if xaxiscounter+1>len(objs):
-                ax[xaxiscounter].set_visible(False)
-            xaxiscounter+=1
-
-        for obj in objs:
-            times, mags, errors =convert_to_times_mags(obj)
-            markers,bars,caps=ax[xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
-            [bar.set_alpha(0.5) for bar in bars]
-            [cap.set_alpha(0.5) for cap in caps]
-            ax[xcounter].set(xlabel='Time (days)',ylabel='Magnitude')
-            #ax[xcounter].set_title(obj)
-            xcounter+=1
-    
+def raw_plot(obj):
+    fig, ax=plt.subplots()
+    times, mags, errors =get_data(obj,False)
+    markers,bars,caps=ax.errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
+    [bar.set_alpha(0.5) for bar in bars]
+    [cap.set_alpha(0.5) for cap in caps]
+    ax.set(xlabel='Time (days)',ylabel='Magnitude')
+    fig.set_figheight(5)
+    fig.set_figwidth(7.5)
+    plt.title(obj)
     plt.show()
-
-
-#MEAN TESTING
-def means_plot():
-    pass
 
 #CURVE FITTING
 def fitting(obj):
-    times, mags, errors =get_data(obj) #get data for given object
+    times, mags, errors =get_data(obj,True) #get data for given object
 
     initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
     
@@ -187,64 +135,6 @@ def fitting(obj):
     print('Reduced Chi Squared: '+str(reduced_sin_chi))
 
     plt.show()
-
-def basic_plot(obj):
-    fig, ax=plt.subplots()
-    times, mags, errors =get_data(obj)
-    markers,bars,caps=ax.errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
-    [bar.set_alpha(0.5) for bar in bars]
-    [cap.set_alpha(0.5) for cap in caps]
-    ax.set(xlabel='Time (days)',ylabel='Magnitude')
-    fig.set_figheight(5)
-    fig.set_figwidth(7.5)
-    plt.title(obj)
-    plt.show()
-
-
-objs=['sz_cas_test']
-
-fitting('sz_cas')
-
-def fittingtesting():
-    times, mags, errors = get_data('cg_cas')
-    times, mags, errors = times[2:-7], mags[2:-7], errors[2:-7]
-
-    plt.figure()
-    plt.scatter(times, mags)
-    initial_values=[1,1]
-    def linear(x, *params):
-        return params[0]*x+params[1]
-    popt, cov = sp.optimize.curve_fit(linear,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True)
-
-    smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
-
-    plt.plot(smooth_x,linear(smooth_x,*popt))
-    print('gradient: '+str(popt[0]))
-    print('intercept: '+str(popt[1]))
-
-    fitted_params=[popt[0],popt[1]]
-    print(fitted_params)
-
-def aphot_cg_cas_testing():
-    times, mags, errors = get_data('cg_cas')
-    hand_values= [11.758,11.725]
-    hand_errors=[0.019,0.018]
-    differences=[abs(hand_values[0]-mags[0]),abs(hand_values[1]-mags[1])]
-    error_differences=[abs(hand_errors[0]-errors[0]),abs(hand_errors[1]-errors[1])]
-    difference_in_points=[abs(mags[0]-mags[1]),abs(hand_values[0]-hand_values[1])]
-    mag_ratios=[mags[0]/hand_values[0],mags[1]/hand_values[1]]
-    err_ratios=[errors[0]/hand_errors[0],errors[1]/hand_errors[1]]
-
-    print('\n~~~~~ ad0101.fits ~~~~~\naphot: '+str(mags[0])+' +/- '+str(errors[0])+'\nby hand: '+str(hand_values[0])+' +/- '+str(hand_errors[0]))
-    print('\n~~~~~ ad0102.fits ~~~~~\naphot: '+str(mags[1])+' +/- '+str(errors[1])+'\nby hand: '+str(hand_values[1])+' +/- '+str(hand_errors[1]))
-    print('\n~~~ Difference in Magnitudes ~~~\nad0101.fits: '+str(differences[0])+'\nad0102.fits: '+str(differences[1]))
-    print('\n~~~ Difference in Errors ~~~\nad0101.fits: '+str(error_differences[0])+'\nad0102.fits: '+str(error_differences[1]))
-    print('\n~~~ Overall Point Separation ~~~\naphot: '+str(difference_in_points[0])+'\nBy Hand: '+str(difference_in_points[1])+'\n')
-    print('\n ~~~ Magnitude Ratios ~~~\nad0101.fits: '+str(mag_ratios[0])+'\nad0102.fits: '+str(mag_ratios[1])+'\n')
-    print('\n ~~~ Error Ratios ~~~\nad0101.fits: '+str(err_ratios[0])+'\nad0102.fits: '+str(err_ratios[1])+'\n')
-
-#aphot_cg_cas_testing()
-
 
 
 '''
