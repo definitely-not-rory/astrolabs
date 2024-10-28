@@ -2,7 +2,7 @@
 from imports import *
 
 #DATA PROCESSING
-def get_data(obj,use_mean):
+def get_data_aphot(obj,use_mean):
     dates =os.listdir(obj+'/') #get list of available nights for given object
     times=[] #storage for data
     mags=[]
@@ -30,7 +30,7 @@ def get_data(obj,use_mean):
         return times, mags, errors
 
 #POST DATA COLLECTION CHANGES DATA PROCESSING
-def get_data_new(obj):
+def get_data_manual(obj):
     df=pd.read_csv(obj+'/data.txt',delimiter=' ',header=None)
     arrays=df.to_numpy()
     times=arrays[:,0]
@@ -45,7 +45,7 @@ def calculate_magnitude(counts,zpt):
     return mags
 
 def convert_to_times_mags(obj):
-    times, counts = get_data_new(obj)
+    times, counts = get_data_manual(obj)
     modified_times=[]
     for stringtime in times:
         objecttime=time.Time(stringtime, format='isot',scale='utc')
@@ -70,7 +70,7 @@ def convert_to_times_mags(obj):
 #INITIAL PLOTS
 def raw_plot(obj):
     fig, ax=plt.subplots()
-    times, mags, errors =get_data(obj,False)
+    times, mags, errors =get_data_aphot(obj,False)
     markers,bars,caps=ax.errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
     [bar.set_alpha(0.5) for bar in bars]
     [cap.set_alpha(0.5) for cap in caps]
@@ -85,7 +85,7 @@ def fitting(obj,use_mean,newmethod):
     if newmethod==True:
         times,mags,errors=convert_to_times_mags(obj)
     else:
-        times, mags, errors =get_data(obj,use_mean) #get data for given object
+        times, mags, errors =get_data_aphot(obj,use_mean) #get data for given object
 
     initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
     
