@@ -110,6 +110,20 @@ def fitting(obj,use_mean,newmethod):
             func+=params[param]*np.cos((param-1)*freq*t)
         return func
 
+    def fra_ind_fourier(t,*params):
+        a_0=np.mean(mags)
+        period=params[0]
+        def psi(t,period):
+            return t/period-int(t/period)
+        func=a_0+params[1]*np.cos(2*np.pi*psi(t,period)+params[2])
+        n_count=3
+        for i in range(3,len(params))/2:
+            func+=params[n_count]*np.cos(2*np.pi*psi(t,period)+params[n_count+1])
+            n_count+=2
+        return func
+
+
+
     def generate_fourier_bounds(input_params):
         lower_bound=-np.inf*np.ones(len(input_params))
         upper_bound=np.inf*np.ones(len(input_params))
