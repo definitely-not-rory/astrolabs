@@ -49,7 +49,7 @@ def convert_to_times_mags(obj):
     times, counts = get_data_manual(obj)
     modified_times=[]
     for stringtime in times:
-        objecttime=time.Time(stringtime, format='isot',scale='utc')
+        objecttime=astrotime.Time(stringtime, format='isot',scale='utc')
         modified_times.append(objecttime.mjd)
     zeros = []
     err_zeros = []
@@ -89,13 +89,12 @@ def fitting(obj,use_mean,newmethod):
         times, mags, errors =get_data_aphot(obj,use_mean) #get data for given object
 
     initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
-    
-    bounds = ([-np.inf,-np.inf,-np.inf,-np.inf],[np.inf,np.inf,np.inf,np.inf])
+    initial_fourier=[0.5,1,1,1,1]
 
     def sin_function(t,*params):
         '''
         amplitude = params[0]
-        period = params[1]
+        frequency = params[1]
         phase = params[2]
         displacement = params[3]
         '''
@@ -104,8 +103,22 @@ def fitting(obj,use_mean,newmethod):
     def sawtooth_function(t, *params):
         return params[0]*sp.signal.sawtooth(params[1]*t-params[2])+params[3] #defining sawtooth function for fitting
     
-    sawpopt, sawcov = sp.optimize.curve_fit(sawtooth_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6, bounds=bounds) #run fitting for each model
-    sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6, bounds=bounds)
+    def fourier(t,*params):
+        freq=params[0]
+        func = params[1]+params[2]*np.cos(freq*t)
+        for param in range(3,len(params)):
+            func+=params[param]*np.cos((param-1)*freq*t)
+        return func
+
+    def generate_fourier_bounds(input_params):
+        lower_bound=-np.inf*np.ones(len(input_params))
+        upper_bound=np.inf*np.ones(len(input_params))
+        bounds=(lower_bound,upper_bound)
+        return bounds
+
+    sawpopt, sawcov = sp.optimize.curve_fit(sawtooth_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6) #run fitting for each model
+    sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6)
+    fourierpopt, fouriercov = sp.optimize.curve_fit(fourier,times,mags,sigma=errors,absolute_sigma=True,p0=initial_fourier,check_finite=True,maxfev=10**6,bounds=generate_fourier_bounds(initial_fourier))
     
     smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
 
@@ -113,13 +126,14 @@ def fitting(obj,use_mean,newmethod):
 
     plt.plot(smooth_x,sawtooth_function(smooth_x, *sawpopt),c='r',linestyle='dashed') #plot fitted models
     plt.plot(smooth_x,sin_function(smooth_x, *sinpopt),c='b',linestyle='dashed')
-    #plt.plot(times,y_fourier)
+    plt.plot(smooth_x,fourier(smooth_x,*fourierpopt),c='g',linestyle='dashed')
 
     plt.xlabel('Time (days)') #axes errors
     plt.ylabel('Magnitude')
 
     sawpopt_errs = np.sqrt(np.diag(sawcov)) #calculate errors
     sinpopt_errs = np.sqrt(np.diag(sincov))
+    fourierpopt_errs=np.sqrt(np.diag(fouriercov))
 
     def chi_squared(model_params, model, x_data, y_data, y_err):
         return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
@@ -129,6 +143,9 @@ def fitting(obj,use_mean,newmethod):
 
     saw_chi_val=chi_squared(sawpopt, sawtooth_function, times, mags, errors)
     reduced_saw_chi=saw_chi_val/len(times)
+
+    fourier_chi_val=chi_squared(fourierpopt,fourier,times,mags,errors)
+    reduced_fourier_chi=fourier_chi_val/len(times)
 
     raw_vs_average=''
     aphot_vs_hand=''
@@ -146,8 +163,14 @@ def fitting(obj,use_mean,newmethod):
 
     print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1]))
     print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(sinpopt_errs[1]/sinpopt[1]**2))
-    print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi))
+    print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
+
+    print('\n~~~ Fourier Model ~~~\nFourier Frequency: '+str(fourierpopt[0]))
+    print('Fourier Period: '+str(2*np.pi/fourierpopt[0])+' +/- '+str(fourierpopt_errs[0]/fourierpopt[0]**2))
+    print('Fourier Reduced Chi Squared: '+str(reduced_fourier_chi))
 
     plt.show()
 
-fitting('sz_cas',True,False)
+fitting('cg_cas',False,False)
+
+#raw_plot('sz_cas')
