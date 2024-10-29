@@ -1,0 +1,10 @@
+No automag_driver in current directory.  Using default at /mnt/64bin/auto_astrom/automag_driver
+automag_driver: using file /mnt/64bin/auto_astrom/automag_driver
+aperture parameters; rad, r_in, r_out: 5.0, 15.0, 25.0
+pixel scale is: 1.0703919582046417
+RA/Dec center of frame: 346.7826994727775 58.55554107992911
+There are 102 matches within 3.0arcsec and above SNR=7.0
+Zeropoint: 
+mean    median   mean_weighted  stdev  zpt_err
+23.086  23.084   23.181         0.068  0.007
+
