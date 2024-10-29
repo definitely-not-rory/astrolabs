@@ -15,7 +15,7 @@ def get_data_aphot(obj,use_mean):
             df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
-            meanmags=np.append(meanmags,np.median(arrays[:,1]))
+            meanmags=np.append(meanmags,np.mean(arrays[:,1]))
             meanerrors=np.append(meanerrors,np.std(arrays[:,2])/len(arrays[:,2]))
             for point in arrays: #iterate through extracted data and store in correct places
                 times.append(point[0])
@@ -24,6 +24,7 @@ def get_data_aphot(obj,use_mean):
     except:
         pass #ignore all non-directories
     times-=times[0] #normalise time values to begin at 0
+    meantimes-=meantimes[0]
     if use_mean==True:
         return meantimes,meanmags,meanerrors
     else:
@@ -103,7 +104,6 @@ def fitting(obj,use_mean,newmethod):
     def sawtooth_function(t, *params):
         return params[0]*sp.signal.sawtooth(params[1]*t-params[2])+params[3] #defining sawtooth function for fitting
     
-
     sawpopt, sawcov = sp.optimize.curve_fit(sawtooth_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6, bounds=bounds) #run fitting for each model
     sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6, bounds=bounds)
     
@@ -113,6 +113,7 @@ def fitting(obj,use_mean,newmethod):
 
     plt.plot(smooth_x,sawtooth_function(smooth_x, *sawpopt),c='r',linestyle='dashed') #plot fitted models
     plt.plot(smooth_x,sin_function(smooth_x, *sinpopt),c='b',linestyle='dashed')
+    #plt.plot(times,y_fourier)
 
     plt.xlabel('Time (days)') #axes errors
     plt.ylabel('Magnitude')
@@ -138,7 +139,7 @@ def fitting(obj,use_mean,newmethod):
     if newmethod==False:
         aphot_vs_hand='from aphot.py'
 
-    print('\n~~~ '+raw_vs_average+'Frequency and Period Data'+aphot_vs_hand+' ~~~')
+    print('\n~~~ '+raw_vs_average+' Frequency and Period Data '+aphot_vs_hand+' ~~~')
     print('\n ~~~ Sawtooth Model ~~~\nSawtooth Frequency: '+str(sawpopt[1]))
     print('Sawtooth Period: ' +str(2*np.pi/sawpopt[1])+ ' +/- '+str(sawpopt_errs[1]/sawpopt[1]**2)) #print calculated periods with errors
     print('Sawtooth Reduced Chi Squared: '+str(reduced_saw_chi)+'\n')
@@ -148,3 +149,5 @@ def fitting(obj,use_mean,newmethod):
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi))
 
     plt.show()
+
+fitting('sz_cas',True,False)
