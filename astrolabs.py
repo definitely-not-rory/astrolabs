@@ -89,7 +89,7 @@ def fitting(obj,use_mean,newmethod):
         times, mags, errors =get_data_aphot(obj,use_mean) #get data for given object
 
     initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
-    initial_fourier=[0.5,1,1,1,1]
+    initial_fourier=[0.5,1,1,1,1,1,1,1,1,1,1,1,1,1]
 
     def sin_function(t,*params):
         '''
@@ -114,15 +114,14 @@ def fitting(obj,use_mean,newmethod):
         a_0=np.mean(mags)
         period=params[0]
         def psi(t,period):
-            return t/period-int(t/period)
+            ints=[int(times/period) for times in t]
+            return t/period-ints
         func=a_0+params[1]*np.cos(2*np.pi*psi(t,period)+params[2])
         n_count=3
-        for i in range(3,len(params))/2:
+        for i in range(int((len(params)-3)/2)):
             func+=params[n_count]*np.cos(2*np.pi*psi(t,period)+params[n_count+1])
             n_count+=2
         return func
-
-
 
     def generate_fourier_bounds(input_params):
         lower_bound=-np.inf*np.ones(len(input_params))
@@ -132,7 +131,7 @@ def fitting(obj,use_mean,newmethod):
 
     sawpopt, sawcov = sp.optimize.curve_fit(sawtooth_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6) #run fitting for each model
     sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6)
-    fourierpopt, fouriercov = sp.optimize.curve_fit(fourier,times,mags,sigma=errors,absolute_sigma=True,p0=initial_fourier,check_finite=True,maxfev=10**6,bounds=generate_fourier_bounds(initial_fourier))
+    fourierpopt, fouriercov = sp.optimize.curve_fit(fra_ind_fourier,times,mags,sigma=errors,absolute_sigma=True,p0=initial_fourier,check_finite=True,maxfev=10**6,bounds=generate_fourier_bounds(initial_fourier))
     
     smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
 
