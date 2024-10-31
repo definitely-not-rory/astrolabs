@@ -1,5 +1,5 @@
 from imports import *
-from astrolabs import convert_to_times_mags
+from astrolabs import *
 
 def plot_grid(objs):
     rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
@@ -24,9 +24,24 @@ def plot_grid(objs):
                 xaxiscounter+=1 #if in middle of row, progress to next x position
 
         for obj in objs:
-            times, mags, errors =convert_to_times_mags(obj) #get data from given object
+            times, mags, errors =get_data(obj) #get data from given object
+            initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
+            def sin_function(t,*params):
+                '''
+                amplitude = params[0]
+                frequency = params[1]
+                phase = params[2]
+                displacement = params[3]
+                '''
+                return params[0]*np.sin(params[1]*t-params[2])+params[3] #defining sine function for fitting
+            
+            sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6)
+            smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
+            
             markers,bars,caps=ax[ycounter][xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=2) #generate figure
-
+            
+            ax[ycounter][xcounter].plot(smooth_x,sin_function(smooth_x, *sinpopt),c='b',linestyle='dashed')
+            
             [bar.set_alpha(0.5) for bar in bars] #set error bars to translucent
             [cap.set_alpha(0.5) for cap in caps] 
 
@@ -50,7 +65,7 @@ def plot_grid(objs):
             xaxiscounter+=1
 
         for obj in objs:
-            times, mags, errors =convert_to_times_mags(obj)
+            times, mags, errors =get_data(obj)
             markers,bars,caps=ax[xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
             [bar.set_alpha(0.5) for bar in bars]
             [cap.set_alpha(0.5) for cap in caps]
@@ -59,3 +74,7 @@ def plot_grid(objs):
             xcounter+=1
     
     plt.show()
+
+objs=['cg_cas','ch_cas','cp_cep','cy_cas','sz_cas']
+
+plot_grid(objs)

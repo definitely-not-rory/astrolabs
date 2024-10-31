@@ -8,3 +8,5 @@ import os
 import math
 import re
 import time
+import warnings
+warnings.filterwarnings("ignore")

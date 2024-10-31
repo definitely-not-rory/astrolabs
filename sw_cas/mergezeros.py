@@ -1,5 +1,0 @@
-filenames = ['24_10_07/stacks/zpts.log','24_10_14/stacks/zpts.log','24_10_17/stacks/zpts.log','24_10_19/stacks/zpts.log','24_10_21/stacks/zpts.log','24_10_23/stacks/zpts.log']
-with open('zeros.txt','w') as outfile:
-    for fname in filenames:
-        with open(fname) as infile:
-            outfile.write(infile.read())

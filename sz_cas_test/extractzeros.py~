@@ -1,3 +1,0 @@
-with open('zeros.txt','r') as readfile:
-    content = readfile.read()
-    print(content)
