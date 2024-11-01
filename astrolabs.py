@@ -8,19 +8,22 @@ def get_data(obj):
     meanmags=[]
     meanerrors=[]
     for date in dates: #iterate through available data
+        folder=False
         try:
             df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
+            folder=True
         except:
             pass
-        arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
-        meantimes=np.append(meantimes,np.mean(arrays[:,0]))
-        meanmags=np.append(meanmags,np.mean(arrays[:,1]))
-        mean_in_error=np.mean(arrays[:,2])
-        std_in_data=np.std(arrays[:,2])/len(arrays[:,2])
-        if mean_in_error>std_in_data:
-            meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
-        else:    
-            meanerrors=np.append(meanerrors,np.std(arrays[:,1])/len(arrays[:,1]))
+        if folder==True:
+            arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
+            meantimes=np.append(meantimes,np.mean(arrays[:,0]))
+            meanmags=np.append(meanmags,np.mean(arrays[:,1]))
+            mean_in_error=np.mean(arrays[:,2])
+            std_in_data=np.std(arrays[:,1])
+            if mean_in_error>std_in_data:
+                meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
+            else:    
+                meanerrors=np.append(meanerrors,np.std(arrays[:,1]))
     meantimes-=meantimes[0]
     return meantimes,meanmags,meanerrors
 
@@ -40,7 +43,7 @@ def raw_plot(obj):
 #CURVE FITTING
 def fitting(obj):
     times, mags, errors =get_data(obj) #get data for given object
-    initial_values = [max(mags)-(max(mags)+min(mags))/2,0.5,2*np.pi,(max(mags)+min(mags))/2] #setting of trial values for both models
+    initial_values = [max(mags)-np.mean(mags),0.5,2*np.pi,np.mean(mags)] #setting of trial values for both models
 
     def sin_function(t,*params):
         '''
@@ -54,7 +57,8 @@ def fitting(obj):
     def sawtooth_function(t, *params):
         return params[0]*sp.signal.sawtooth(params[1]*t-params[2])+params[3] #defining sawtooth function for fitting
     
-    #FOURIER GOES HERE WHEN FIXED
+    def fourier(t, *params):
+        pass
 
     def generate_initial_fourier(n):
         initial_fourier=np.ones(2*n+1)
@@ -76,7 +80,7 @@ def fitting(obj):
     smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
 
     plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3) #display raw data
-
+    
     plt.plot(smooth_x,sawtooth_function(smooth_x, *sawpopt),c='r',linestyle='dashed') #plot fitted models
     plt.plot(smooth_x,sin_function(smooth_x, *sinpopt),c='b',linestyle='dashed')
     #plt.plot(smooth_x,fourier(smooth_x,*fourierpopt),c='g',linestyle='dashed')
@@ -118,3 +122,13 @@ def fitting(obj):
 
     plt.show()
 
+
+'''
+
+FIX CHI SQ
+
+ALIASING PLOT - Chi vs Period, plot over number of observations
+
+RESIDUALS
+
+'''
