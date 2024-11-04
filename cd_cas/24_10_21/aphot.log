@@ -1,0 +1,16 @@
+read ra/dec for calibration star of: (356.156642, 63.066039) (356.399713, 62.908706)
+automag_driver: using file automag_driver
+aperture parameters; rad, r_in, r_out: 5.0, 15.0, 25.0
+-----------------------------------------
+156
+/mnt//archive/draco2/2024/24_10_21//ad0156.fits
+flat found.  dividing by flatfield
+read ra/dec for target of: (356.260948, 63.003853)
+pixel scale is: 0.9861167741246853
+x/y of var, cal1, cal2: 552.5809227612903 417.4151386576421 767.6499904684352 604.851900675563 256.1055029852235 124.34600680685173
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 552.58092 417.41514 ... 90131.655       11593.198           438.27104
+  2 767.64999  604.8519 ... 90076.432       18901.356           446.40701
+  3  256.1055 124.34601 ...  91672.43       7397.4349           436.99805

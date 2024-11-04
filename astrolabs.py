@@ -131,6 +131,7 @@ def fitting(obj):
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
 
 
+fitting('sw_cas')
 
 '''
 

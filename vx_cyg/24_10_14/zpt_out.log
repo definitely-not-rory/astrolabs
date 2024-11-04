@@ -1,0 +1,9 @@
+automag_driver: using file automag_driver
+aperture parameters; rad, r_in, r_out: 5.0, 15.0, 25.0
+pixel scale is: 0.985409299472319
+RA/Dec center of frame: 314.3291696168212 40.16932219017995
+There are 39 matches within 3.0arcsec and above SNR=10.0
+Zeropoint: 
+mean    median   mean_weighted  stdev  zpt_err
+22.188  22.169   22.177         0.075  0.012
+
