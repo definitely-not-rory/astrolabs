@@ -123,15 +123,12 @@ def fitting(obj):
     plt.ylabel('Chi Squared ( )')
     plt.show()
 
-    #plt.figure()
-
-    print('\n~~~ Time Averaged Frequency and Period Data ~~~')
+    print('\n~~~ '+obj+' Time Averaged Frequency and Period Data ~~~')
     print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1])+' +/- '+str(mean_error_in_freq))
     print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(upper_error/sinpopt[1]**2))
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
 
 
-fitting('sw_cas')
 
 '''
 

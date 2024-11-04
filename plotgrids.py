@@ -121,7 +121,11 @@ def plot_grid(objs):
     
     plt.show()
 
-objs=['cg_cas','ch_cas','cy_cas','sz_cas','kx_cyg','v396_cyg','v532_cyg','v538_cyg','v609_cyg','vx_cyg']
+objs=next(os.walk('.'))[1]
+
+objs=objs[2:-1]
+
+print(objs)
 
 plot_grid(objs)
 
