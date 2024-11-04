@@ -1,5 +1,5 @@
 from imports import *
-from astrolabs import *
+from astrolabs import get_data
 
 def plot_grid(objs):
     print('\n')
