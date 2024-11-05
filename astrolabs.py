@@ -1,52 +1,35 @@
-#IMPORTS
 from imports import *
+from data_handling import get_data, raw_plot
+from fourier import fourier_fitting
+from sinusoidal import sin_fitting
+from plotgrids import plot_grid
+from alias import alias
 
-#DATA PROCESSING
-def get_data(obj):
-    try:
-        dates =os.listdir(obj+'/') #get list of available nights for given object
-    except:
-        sys.exit('This object is not in the directory')
-    meantimes=[] #storage for data
-    meanmags=[]
-    meanerrors=[]
-    for date in dates: #iterate through available data
-        folder=False
-        try:
-            df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
-            folder=True
-        except:
-            pass
-        if folder==True:
-            arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
-            meantimes=np.append(meantimes,np.mean(arrays[:,0]))
-            meanmags=np.append(meanmags,np.mean(arrays[:,1]))
-            mean_in_error=np.mean(arrays[:,2])
-            std_in_data=np.std(arrays[:,1])
-            if mean_in_error>std_in_data:
-                meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
-            else:    
-                meanerrors=np.append(meanerrors,np.std(arrays[:,1]))
-    meantimes-=meantimes[0]
-    return meantimes,meanmags,meanerrors
+df = pd.read_csv('mcmaster.txt')
 
-#INITIAL PLOTS
-def raw_plot(obj):
-    fig, ax=plt.subplots()
-    times, mags, errors =get_data(obj)
-    markers,bars,caps=ax.errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
-    [bar.set_alpha(0.5) for bar in bars]
-    [cap.set_alpha(0.5) for cap in caps]
-    ax.set(xlabel='Time (days)',ylabel='Magnitude')
-    fig.set_figheight(5)
-    fig.set_figwidth(7.5)
-    plt.title(obj)
-    plt.show()
+arrays=df.to_numpy()
+
+obj='sz_cas'
+
+objs=next(os.walk('.'))[1]
+
+objs=objs[2:-1]
+
+period=0
+
+for i in arrays:
+    if i[0]==obj:
+        period=i[1]
+    
+fourier_fitting(obj,period)
 
 '''
+RORY TO DO:
 
-ALIASING PLOT - Chi vs Period, plot over number of observations
+Update aliasing with new bounds etc
 
-RESIDUALS
+csv of McMaster Periods and obj names
+
+colour plot of odd and even coefficients on chi_sq for fourier
 
 '''

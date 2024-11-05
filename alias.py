@@ -1,5 +1,5 @@
 from imports import *
-from astrolabs import get_data
+from data_handling import get_data
 
 def alias(obj,min_period,max_period,steps):
 
@@ -73,4 +73,3 @@ def alias(obj,min_period,max_period,steps):
     plt.ylabel('Chi Squared Value ( )')
     plt.show()
 
-alias('sz_cas',1,20,30000)

@@ -1,11 +1,11 @@
 from imports import *
-from astrolabs import get_data
+from data_handling import get_data
 
 def sin_fitting(obj):
-    times, mags, errors =get_data(obj) #get data for given object
+    times, mags, errors =get_data(obj,period) #get data for given object
 
     amp=1
-    period=13.6
+    period=period
     freq=2*np.pi/period
     phi=np.pi
     disp=np.mean(mags)
@@ -67,5 +67,3 @@ def sin_fitting(obj):
     print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1])+' +/- '+str(upper_error))
     print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(upper_error/sinpopt[1]**2))
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
-
-sin_fitting('ry_cas')

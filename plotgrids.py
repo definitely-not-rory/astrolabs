@@ -1,5 +1,5 @@
 from imports import *
-from astrolabs import get_data
+from data_handling import get_data
 
 def plot_grid(objs):
     print('\n')
@@ -120,12 +120,3 @@ def plot_grid(objs):
             xcounter+=1
     
     plt.show()
-
-objs=next(os.walk('.'))[1]
-
-objs=objs[2:-1]
-
-print(objs)
-
-plot_grid(objs)
-

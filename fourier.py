@@ -1,5 +1,5 @@
 from imports import *
-from astrolabs import get_data
+from data_handling import get_data
 
 def fourier_fitting(obj,period):
     times,mags,errors=get_data(obj)
@@ -28,7 +28,7 @@ def fourier_fitting(obj,period):
     phi2_hi=2*np.pi
     disp_lo=np.mean(mags)-1
     disp_hi=np.mean(mags)+1
-    
+
     sin_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
 
     popt,cov=sp.optimize.curve_fit(fourier_function,times,mags,sigma=errors,p0=fourier_values,check_finite=True,maxfev=10**6)
@@ -61,5 +61,3 @@ def fourier_fitting(obj,period):
     print('Period (days): '+str(output_popt[2])+' +/- '+str(upper_error))
     print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*2pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*2pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
     print('Reduced Chi Squared: '+str(reduced_chi))
-
-fourier_fitting('ry_cas',12.1)
