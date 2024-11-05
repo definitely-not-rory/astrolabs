@@ -10,4 +10,11 @@ import re
 import time
 import sys
 import warnings
+from astroquery.simbad import Simbad
+from astroquery.gaia import Gaia
 warnings.filterwarnings("ignore")
+
+
+### Use pre-release version of astroquery
+
+### pip install -U --pre astroquery
