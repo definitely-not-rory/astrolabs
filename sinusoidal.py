@@ -3,7 +3,14 @@ from astrolabs import get_data
 
 def sin_fitting(obj):
     times, mags, errors =get_data(obj) #get data for given object
-    initial_values = [max(mags)-np.mean(mags),0.5,2*np.pi,np.mean(mags)] #setting of trial values for both models
+
+    amp=1
+    period=13.6
+    freq=2*np.pi/period
+    phi=np.pi
+    disp=np.mean(mags)
+
+    initial_values = [amp,freq,phi,disp] #setting of trial values for both models
 
     def sin_function(t,*params):
         '''
@@ -13,8 +20,21 @@ def sin_fitting(obj):
         displacement = params[3]
         '''
         return params[0]*np.sin(params[1]*t-params[2])+params[3] #defining sine function for fitting
-   
-    sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,check_finite=True, maxfev=10**6)
+    
+    amp_lo=-np.inf
+    amp_hi=np.inf
+    p_lo=period/1.2
+    p_hi=period*1.2
+    f_hi=2*np.pi/p_lo
+    f_lo=2*np.pi/p_hi
+    phi_lo=0
+    phi_high=2*np.pi
+    disp_lo=np.mean(mags)-1
+    disp_hi=np.mean(mags)+1
+
+    sin_bounds=([amp_lo,f_lo,phi_lo,disp_lo],[amp_hi,f_hi,phi_high,disp_hi])
+
+    sinpopt, sincov = sp.optimize.curve_fit(sin_function,times,mags,sigma=errors,absolute_sigma=True,p0=initial_values,bounds=sin_bounds,check_finite=True, maxfev=10**6)
     
     smooth_x=np.linspace(times[0], times[-1], 1000) #define x-range for plotting
 
@@ -40,7 +60,7 @@ def sin_fitting(obj):
         error_freq+=granularity
         current_chi=chi_squared([sinpopt[0],error_freq,sinpopt[1],sinpopt[2],sinpopt[3]],sin_function,times,mags,errors)
 
-    upper_error=sinpopt[1]-error_freq
+    upper_error=abs(sinpopt[1]-error_freq)
 
 
     print('\n~~~ '+obj+' Time Averaged Frequency and Period Data ~~~')
@@ -48,4 +68,4 @@ def sin_fitting(obj):
     print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(upper_error/sinpopt[1]**2))
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
 
-sin_fitting('sw_cas')
+sin_fitting('ry_cas')

@@ -73,6 +73,4 @@ def alias(obj,min_period,max_period,steps):
     plt.ylabel('Chi Squared Value ( )')
     plt.show()
 
-alias('sz_cas',12,15,3000)
-
-        
+alias('sz_cas',1,20,30000)
