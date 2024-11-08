@@ -1,8 +1,8 @@
 from imports import *
 from data_handling import get_data
 
-def sin_fitting(obj):
-    times, mags, errors =get_data(obj,period) #get data for given object
+def sin_fitting(obj,period):
+    times, mags, errors =get_data(obj) #get data for given object
 
     amp=1
     period=period
@@ -62,8 +62,32 @@ def sin_fitting(obj):
 
     upper_error=abs(sinpopt[1]-error_freq)
 
+    error_freq=sinpopt[1]
+    current_chi=reduced_sin_chi
+
+    while current_chi<reduced_sin_chi+1:
+        error_freq-=granularity
+        current_chi=chi_squared([sinpopt[0],error_freq,sinpopt[1],sinpopt[2],sinpopt[3]],sin_function,times,mags,errors)
+
+    lower_error=abs(sinpopt[1]-error_freq)
+
+    mean_error=np.mean([lower_error,upper_error])
+
+    fitted_period=2*np.pi/sinpopt[1]
+    err_period=mean_error/sinpopt[1]**2
 
     print('\n~~~ '+obj+' Time Averaged Frequency and Period Data ~~~')
-    print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1])+' +/- '+str(upper_error))
-    print('Sin Period: '+str(2*np.pi/sinpopt[1])+' +/- '+str(upper_error/sinpopt[1]**2))
+    print('\n~~~ Sinusoidal Model ~~~\nSin Frequency: '+str(sinpopt[1])+' +/- '+str(mean_error))
+    print('Sin Period: '+str(fitted_period)+' +/- '+str(err_period))
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
+
+    folded_times=times%fitted_period
+
+    plt.figure()
+    plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+    plt.ylabel('Magnitude')
+    plt.xlabel('Phase')
+    plt.show()
+
+
+    return fitted_period,err_period,reduced_sin_chi

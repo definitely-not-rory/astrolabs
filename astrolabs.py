@@ -9,7 +9,7 @@ df = pd.read_csv('mcmaster.txt')
 
 arrays=df.to_numpy()
 
-obj='sz_cas'
+obj='ry_cas'
 
 objs=next(os.walk('.'))[1]
 
@@ -21,15 +21,19 @@ for i in arrays:
     if i[0]==obj:
         period=i[1]
     
-fourier_fitting(obj,period)
+print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
+
+#plot_grid(objs)
+
+alias(obj,period,10,15,300)
 
 '''
 RORY TO DO:
 
-Update aliasing with new bounds etc
-
-csv of McMaster Periods and obj names
+jackknifing
 
 colour plot of odd and even coefficients on chi_sq for fourier
+
+plot fitted function on folded data
 
 '''

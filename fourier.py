@@ -29,9 +29,9 @@ def fourier_fitting(obj,period):
     disp_lo=np.mean(mags)-1
     disp_hi=np.mean(mags)+1
 
-    sin_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
+    fourier_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
 
-    popt,cov=sp.optimize.curve_fit(fourier_function,times,mags,sigma=errors,p0=fourier_values,check_finite=True,maxfev=10**6)
+    popt,cov=sp.optimize.curve_fit(fourier_function,times,mags,sigma=errors,p0=fourier_values,bounds=fourier_bounds,check_finite=True,maxfev=10**6)
 
     smooth_x=np.linspace(times[0], times[-1], 1000)
 
@@ -40,6 +40,8 @@ def fourier_fitting(obj,period):
     plt.figure()
     plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
     plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
+    plt.xlabel('Time (days)') 
+    plt.ylabel('Magnitude')
     plt.show()
 
     def chi_squared(model_params, model, x_data, y_data, y_err):
@@ -57,7 +59,28 @@ def fourier_fitting(obj,period):
 
     upper_error=abs(popt[1]-error_period)
 
+    error_period=popt[1]
+    current_chi=reduced_chi
 
-    print('Period (days): '+str(output_popt[2])+' +/- '+str(upper_error))
+    while current_chi<reduced_chi+1:
+        error_period-=granularity
+        current_chi=chi_squared([popt[0],error_period,popt[1],popt[2],popt[3],popt[4],popt[5]],fourier_function,times,mags,errors)
+
+    lower_error=abs(popt[1]-error_period)
+
+    fitted_period=popt[1]
+    mean_error=np.mean([lower_error,upper_error])
+
+    print('Period (days): '+str(output_popt[2])+' +/- '+str(mean_error))
     print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*2pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*2pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
     print('Reduced Chi Squared: '+str(reduced_chi))
+
+    folded_times=times%fitted_period
+
+    plt.figure()
+    plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+    plt.ylabel('Magnitude')
+    plt.xlabel('Phase')
+    plt.show()
+
+    return fitted_period,mean_error,reduced_chi
