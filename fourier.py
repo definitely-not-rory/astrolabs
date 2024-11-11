@@ -50,32 +50,35 @@ def fourier_fitting(obj,period):
     reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/len(times)
 
     granularity=0.001
-    error_period=popt[1]
+    error_period=popt[2]
     current_chi=reduced_chi
 
     while current_chi<reduced_chi+1:
         error_period+=granularity
-        current_chi=chi_squared([popt[0],error_period,popt[1],popt[2],popt[3],popt[4],popt[5]],fourier_function,times,mags,errors)
+        current_chi=chi_squared([popt[0],popt[1],error_period,popt[3],popt[4],popt[5]],fourier_function,times,mags,errors)
 
-    upper_error=abs(popt[1]-error_period)
+    upper_error=abs(popt[2]-error_period)
 
-    error_period=popt[1]
+    error_period=popt[2]
     current_chi=reduced_chi
 
     while current_chi<reduced_chi+1:
         error_period-=granularity
-        current_chi=chi_squared([popt[0],error_period,popt[1],popt[2],popt[3],popt[4],popt[5]],fourier_function,times,mags,errors)
+        current_chi=chi_squared([popt[0],popt[1],error_period,popt[3],popt[4],popt[5]],fourier_function,times,mags,errors)
 
-    lower_error=abs(popt[1]-error_period)
+    lower_error=abs(popt[2]-error_period)
 
-    fitted_period=popt[1]
+    fitted_period=popt[2]
     mean_error=np.mean([lower_error,upper_error])
 
     print('Period (days): '+str(output_popt[2])+' +/- '+str(mean_error))
     print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*2pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*2pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
     print('Reduced Chi Squared: '+str(reduced_chi))
 
-    folded_times=times%fitted_period
+
+    folded_times=times
+    for i in range(len(folded_times)):
+        folded_times[i]=folded_times[i]%fitted_period
 
     plt.figure()
     plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
