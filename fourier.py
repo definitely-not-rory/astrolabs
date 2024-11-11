@@ -86,4 +86,4 @@ def fourier_fitting(obj,period):
     plt.xlabel('Phase')
     plt.show()
 
-    return fitted_period,mean_error,reduced_chi
+    return fitted_period,mean_error,reduced_chi,mean_mag,(np.std(mags)/np.sqrt(len(mags)))

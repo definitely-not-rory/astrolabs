@@ -1,19 +1,40 @@
 from imports import *
+from fourier import fourier_fitting
 
 
 
 def get_periods():
     
-    df = pd.read_csv('practice_starsdata.txt',delimiter=' ',header=None)
+    mcmasterperiods = pd.read_csv("mcmaster.txt",delimiter=",")
     
-    arrays = df.to_numpy()[:,:]
+    mcmasterperiods = np.array(mcmasterperiods['period'])
     
-    print(arrays)
+    objs=next(os.walk('.'))[1]
+    objs = objs[1:-1]
     
-    mags = np.array(arrays[:,0])
-    mags_errs  = np.array(arrays[:,1])
-    periods = np.array(arrays[:,2])
-    periods_errs = np.array(arrays[:,3])
+    mags = []
+    mags_errs = []
+    periods = []
+    periods_errs = []
+    
+    for i in range(len(objs)):
+        
+        period,period_err,reduced_chi,mean_mag,mean_mag_err = fourier_fitting(objs[i],mcmasterperiods[i])
+        
+        mags = np.append(mags,mean_mag)
+        mags_errs = np.append(mags_errs,mean_mag_err)
+        periods = np.append(periods,period)
+        periods_errs = np.append(periods_errs,period_err)
+    
+    
+    """practice_starsdata = pd.read_csv("practice_starsdata.txt", delimiter=" ", header=None)
+    
+    mags = practice_starsdata[0].to_numpy()
+    mags_errs = practice_starsdata[1].to_numpy()
+    periods = practice_starsdata[2].to_numpy()
+    periods_errs = practice_starsdata[3].to_numpy()
+    """
+    
     
     return mags, mags_errs, periods, periods_errs
 
@@ -80,11 +101,11 @@ def get_parallaxes():
     
     for i in range(24):
         
-        parallaxes = np.append(parallaxes,results['parallax'][i-1])
+        parallaxes = np.append(parallaxes,results['parallax'][i])
         
     dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
     
-    return dist_pc[0:8]
+    return dist_pc
 
 
 
@@ -96,7 +117,16 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
     
     lums = 47.2 * 3.828 * 10 ** 26 * 10 ** (-0.4 * abs_mags)
     
-    plt.errorbar(np.log10(periods), abs_mags, xerr=(periods_errs/(periods*np.log(10))), yerr=mags_errs)
+    logperiods = np.log10(periods)
+    
+    sorted_indices = np.argsort(lums)
+    
+    periods = periods[sorted_indices]
+    lums = lums[sorted_indices]
+    logperiods = logperiods[sorted_indices]
+    periods_errs = periods_errs[sorted_indices]
+    
+    plt.errorbar(logperiods[0:23], lums[0:23], xerr=(periods_errs[0:23]/(periods[0:23]*np.log(10))), yerr=(0.05*lums[0:23]), linestyle=" ")
     
     plt.show()
     
