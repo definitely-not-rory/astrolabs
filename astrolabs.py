@@ -9,11 +9,13 @@ df = pd.read_csv('mcmaster.txt')
 
 arrays=df.to_numpy()
 
-obj='ry_cas'
-
 objs=next(os.walk('.'))[1]
 
 objs=objs[2:-1]
+
+#plot_grid(objs)
+
+obj=input('Select Cepheid: ')
 
 period=0
 
@@ -23,9 +25,10 @@ for i in arrays:
     
 print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
 
-#plot_grid(objs)
-
-alias(obj,period,10,15,300)
+try:
+    fourier_fitting(obj,period)
+except:
+    sin_fitting(obj,period)
 
 '''
 RORY TO DO:

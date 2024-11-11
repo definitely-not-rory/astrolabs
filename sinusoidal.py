@@ -81,7 +81,9 @@ def sin_fitting(obj,period):
     print('Sin Period: '+str(fitted_period)+' +/- '+str(err_period))
     print('Sinusoidal Reduced Chi Squared: '+str(reduced_sin_chi)+'\n')
 
-    folded_times=times%fitted_period
+    folded_times=times
+    for i in range(len(folded_times)):
+        folded_times[i]=folded_times[i]%fitted_period
 
     plt.figure()
     plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
