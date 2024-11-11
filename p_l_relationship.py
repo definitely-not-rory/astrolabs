@@ -119,14 +119,7 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
     
     logperiods = np.log10(periods)
     
-    sorted_indices = np.argsort(lums)
-    
-    periods = periods[sorted_indices]
-    lums = lums[sorted_indices]
-    logperiods = logperiods[sorted_indices]
-    periods_errs = periods_errs[sorted_indices]
-    
-    plt.errorbar(logperiods[0:23], lums[0:23], xerr=(periods_errs[0:23]/(periods[0:23]*np.log(10))), yerr=(0.05*lums[0:23]), linestyle=" ")
+    plt.errorbar(logperiods, lums, xerr=(periods_errs/(periods*np.log(10))), yerr=(0.05*lums), linestyle=" ")
     
     plt.show()
     
