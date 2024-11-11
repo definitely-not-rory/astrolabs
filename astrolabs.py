@@ -4,6 +4,7 @@ from fourier import fourier_fitting
 from sinusoidal import sin_fitting
 from plotgrids import plot_grid
 from alias import alias
+from colour_plot import colour_plot
 
 df = pd.read_csv('mcmaster.txt')
 
@@ -12,8 +13,10 @@ arrays=df.to_numpy()
 objs=next(os.walk('.'))[1]
 
 objs=objs[2:-1]
+display_grid=input('Show Grid (Y/N): ')
 
-#plot_grid(objs)
+if display_grid=='Y' or display_grid=='y':
+    plot_grid(objs)
 
 obj=input('Select Cepheid: ')
 
@@ -24,19 +27,20 @@ for i in arrays:
         period=i[1]
     
 print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-
 try:
-    fourier_fitting(obj,period)
+    fourier_fitting(obj,period,2,5,True)
 except:
-    sin_fitting(obj,period)
+    print('Not Enough Data To Use Fourier Modelling')
+
+
 
 '''
 RORY TO DO:
 
-jackknifing
+change period % bound
 
-colour plot of odd and even coefficients on chi_sq for fourier
+grid plot of fourier and folded curves
 
-plot fitted function on folded data
+residuals
 
 '''

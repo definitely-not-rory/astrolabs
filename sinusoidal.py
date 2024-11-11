@@ -44,6 +44,7 @@ def sin_fitting(obj,period):
 
     plt.xlabel('Time (days)') #axes errors
     plt.ylabel('Magnitude')
+    plt.gca().invert_yaxis()
     plt.show()
 
     def chi_squared(model_params, model, x_data, y_data, y_err):
@@ -84,11 +85,14 @@ def sin_fitting(obj,period):
     folded_times=times
     for i in range(len(folded_times)):
         folded_times[i]=folded_times[i]%fitted_period
+    
+    print(folded_times)
 
     plt.figure()
     plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
     plt.ylabel('Magnitude')
     plt.xlabel('Phase')
+    plt.gca().invert_yaxis()
     plt.show()
 
 

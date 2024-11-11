@@ -1,10 +1,11 @@
 from imports import *
 from data_handling import get_data
 
-def fourier_fitting(obj,period):
+def fourier_fitting(obj,period,n1,n2,show_plots):
     times,mags,errors=get_data(obj)
 
     mean_mag=np.mean(mags)
+    mean_mag_error=np.std(mags)/(np.sqrt(len(mags)))
     amp1=1
     period=period
     phi1=np.pi
@@ -12,7 +13,7 @@ def fourier_fitting(obj,period):
     phi2=np.pi
 
     def fourier_function(t, *params):
-        return params[0]+params[1]*np.sin(2*(np.pi/params[2])*t+params[3])+params[4]*np.sin(5*(np.pi/params[2])*t+params[5])
+        return params[0]+params[1]*np.sin(n1*(np.pi/params[2])*t+params[3])+params[4]*np.sin(n2*(np.pi/params[2])*t+params[5])
     
     fourier_values=[mean_mag,amp1,period,phi1,amp2,phi2]
 
@@ -36,13 +37,14 @@ def fourier_fitting(obj,period):
     smooth_x=np.linspace(times[0], times[-1], 1000)
 
     output_popt=np.round(popt,2)
-
-    plt.figure()
-    plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-    plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
-    plt.xlabel('Time (days)') 
-    plt.ylabel('Magnitude')
-    plt.show()
+    if show_plots==True:
+        plt.figure()
+        plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
+        plt.xlabel('Time (days)') 
+        plt.ylabel('Magnitude')
+        plt.gca().invert_yaxis()
+        plt.show()
 
     def chi_squared(model_params, model, x_data, y_data, y_err):
         return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
@@ -69,21 +71,43 @@ def fourier_fitting(obj,period):
     lower_error=abs(popt[2]-error_period)
 
     fitted_period=popt[2]
-    mean_error=np.mean([lower_error,upper_error])
+    chi_plus_1_error=np.mean([lower_error,upper_error])
 
-    print('Period (days): '+str(output_popt[2])+' +/- '+str(mean_error))
-    print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*2pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*2pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
-    print('Reduced Chi Squared: '+str(reduced_chi))
+
+    jackknifed_periods=[]
+
+    for i in range(len(times)):
+        jackknifed_mags=np.delete(mags,i)
+        jackknifed_times=np.delete(times,i)
+        jackknifed_errors=np.delete(errors,i)
+
+        jackknifed_period=sp.optimize.curve_fit(fourier_function,jackknifed_times,jackknifed_mags,sigma=jackknifed_errors,p0=fourier_values,bounds=fourier_bounds,check_finite=True,maxfev=10**6)[0][2]
+
+        jackknifed_periods.append(jackknifed_period)
+
+    error_from_jackknifing=np.std(jackknifed_periods)/np.sqrt(len(jackknifed_periods))
+
+    if show_plots==True:
+        print('Period (days): '+str(popt[2]))
+        #print('Error From Chi+1: '+str(chi_plus_1_error))
+        print('Error from Jackknifing: '+str(error_from_jackknifing))
+        print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
+        print('Reduced Chi Squared: '+str(reduced_chi))
 
 
     folded_times=times
     for i in range(len(folded_times)):
         folded_times[i]=folded_times[i]%fitted_period
 
-    plt.figure()
-    plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-    plt.ylabel('Magnitude')
-    plt.xlabel('Phase')
-    plt.show()
+    folded_fit_times=np.linspace(0,fitted_period,1000)
+    
+    if show_plots==True:
+        plt.figure()
+        plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r',linestyle='dashed')
+        plt.ylabel('Magnitude')
+        plt.xlabel('Time in Period (days)')
+        plt.gca().invert_yaxis()
+        plt.show()
 
-    return fitted_period,mean_error,reduced_chi
+    return fitted_period,0,reduced_chi,mean_mag, mean_mag_error
