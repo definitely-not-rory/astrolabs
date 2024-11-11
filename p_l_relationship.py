@@ -4,7 +4,7 @@ from imports import *
 
 def get_periods():
     
-    df = pd.read_csv('starsdata.csv',delimiter='\t',header=None)
+    df = pd.read_csv('practice_starsdata.txt',delimiter=' ',header=None)
     
     arrays = df.to_numpy()[:,:]
     
@@ -43,28 +43,72 @@ def get_parallaxes():
             
     
     
-    #retrieval_type = 'ALL'          # Options are: 'EPOCH_PHOTOMETRY', 'MCMC_GSPPHOT', 'MCMC_MSC', 'XP_SAMPLED', 'XP_CONTINUOUS', 'RVS', 'ALL'
-    #data_structure = 'RAW'     # Options are: 'INDIVIDUAL' or 'RAW'
-    #data_release   = 'Gaia DR3'     # Options are: 'Gaia DR3' (default), 'Gaia DR2'
-    datalink = Gaia.load_data(ids=gaiadr3_ids, data_release='Gaia DR3', retrieval_type='ALL', data_structure='RAW')
     
-    '''
-    dl_keys  = [inp for inp in datalink.keys()]
-    dl_keys.sort()
-    print(f'The following Datalink products have been downloaded:')
-    for dl_key in dl_keys:
-        print(f' * {dl_key}')
-    '''
-    
-    print(vars(datalink["EPOCH_PHOTOMETRY_RAW.xml"]))
-    
-    
-    
-    
-    
-#mags, mags_errs, periods, periods_errs = get_periods()
+        
+    query = f"SELECT parallax \
+    FROM gaiadr3.gaia_source \
+    WHERE source_id = " + gaiadr3_ids[0] + "\
+    OR source_id = " + gaiadr3_ids[1] + "\
+    OR source_id = " + gaiadr3_ids[2] + "\
+    OR source_id = " + gaiadr3_ids[3] + "\
+    OR source_id = " + gaiadr3_ids[4] + "\
+    OR source_id = " + gaiadr3_ids[5] + "\
+    OR source_id = " + gaiadr3_ids[6] + "\
+    OR source_id = " + gaiadr3_ids[7] + "\
+    OR source_id = " + gaiadr3_ids[8] + "\
+    OR source_id = " + gaiadr3_ids[9] + "\
+    OR source_id = " + gaiadr3_ids[10] + "\
+    OR source_id = " + gaiadr3_ids[11] + "\
+    OR source_id = " + gaiadr3_ids[12] + "\
+    OR source_id = " + gaiadr3_ids[13] + "\
+    OR source_id = " + gaiadr3_ids[14] + "\
+    OR source_id = " + gaiadr3_ids[15] + "\
+    OR source_id = " + gaiadr3_ids[16] + "\
+    OR source_id = " + gaiadr3_ids[17] + "\
+    OR source_id = " + gaiadr3_ids[18] + "\
+    OR source_id = " + gaiadr3_ids[19] + "\
+    OR source_id = " + gaiadr3_ids[20] + "\
+    OR source_id = " + gaiadr3_ids[21] + "\
+    OR source_id = " + gaiadr3_ids[22] + "\
+    OR source_id = " + gaiadr3_ids[23]
 
-get_parallaxes()
+
+    job     = Gaia.launch_job_async(query)
+    results = job.get_results()
+    
+    parallaxes = []
+    
+    for i in range(24):
+        
+        parallaxes = np.append(parallaxes,results['parallax'][i-1])
+        
+    dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
+    
+    return dist_pc[0:8]
+
+
+
+        
+
+def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
+    
+    abs_mags = mags - 5 * np.log10(dist_pc) + 5
+    
+    lums = 47.2 * 3.828 * 10 ** 26 * 10 ** (-0.4 * abs_mags)
+    
+    plt.errorbar(np.log10(periods), abs_mags, xerr=(periods_errs/(periods*np.log(10))), yerr=mags_errs)
+    
+    plt.show()
+    
+    
+    
+mags, mags_errs, periods, periods_errs = get_periods()
+
+dist_pc = get_parallaxes()
+
+plot_pl(mags, mags_errs, periods, periods_errs, dist_pc)
+
+
 
 
 
