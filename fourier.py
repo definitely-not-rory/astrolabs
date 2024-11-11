@@ -110,4 +110,4 @@ def fourier_fitting(obj,period,n1,n2,show_plots):
         plt.gca().invert_yaxis()
         plt.show()
 
-    return fitted_period,0,reduced_chi,mean_mag, mean_mag_error
+    return fitted_period,error_from_jackknifing,reduced_chi,mean_mag, mean_mag_error

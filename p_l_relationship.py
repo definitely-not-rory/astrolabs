@@ -1,19 +1,40 @@
 from imports import *
+from fourier import fourier_fitting
 
 
 
 def get_periods():
     
-    df = pd.read_csv('starsdata.csv',delimiter='\t',header=None)
+    mcmasterperiods = pd.read_csv("mcmaster.txt",delimiter=",")
     
-    arrays = df.to_numpy()[:,:]
+    mcmasterperiods = np.array(mcmasterperiods['period'])
     
-    print(arrays)
+    objs=next(os.walk('.'))[1]
+    objs = objs[1:-1]
     
-    mags = np.array(arrays[:,0])
-    mags_errs  = np.array(arrays[:,1])
-    periods = np.array(arrays[:,2])
-    periods_errs = np.array(arrays[:,3])
+    mags = []
+    mags_errs = []
+    periods = []
+    periods_errs = []
+    
+    for i in range(len(objs)):
+        
+        period,period_err,reduced_chi,mean_mag,mean_mag_err = fourier_fitting(objs[i],mcmasterperiods[i])
+        
+        mags = np.append(mags,mean_mag)
+        mags_errs = np.append(mags_errs,mean_mag_err)
+        periods = np.append(periods,period)
+        periods_errs = np.append(periods_errs,period_err)
+    
+    
+    """practice_starsdata = pd.read_csv("practice_starsdata.txt", delimiter=" ", header=None)
+    
+    mags = practice_starsdata[0].to_numpy()
+    mags_errs = practice_starsdata[1].to_numpy()
+    periods = practice_starsdata[2].to_numpy()
+    periods_errs = practice_starsdata[3].to_numpy()
+    """
+    
     
     return mags, mags_errs, periods, periods_errs
 
@@ -43,28 +64,74 @@ def get_parallaxes():
             
     
     
-    #retrieval_type = 'ALL'          # Options are: 'EPOCH_PHOTOMETRY', 'MCMC_GSPPHOT', 'MCMC_MSC', 'XP_SAMPLED', 'XP_CONTINUOUS', 'RVS', 'ALL'
-    #data_structure = 'RAW'     # Options are: 'INDIVIDUAL' or 'RAW'
-    #data_release   = 'Gaia DR3'     # Options are: 'Gaia DR3' (default), 'Gaia DR2'
-    datalink = Gaia.load_data(ids=gaiadr3_ids, data_release='Gaia DR3', retrieval_type='ALL', data_structure='RAW')
     
-    '''
-    dl_keys  = [inp for inp in datalink.keys()]
-    dl_keys.sort()
-    print(f'The following Datalink products have been downloaded:')
-    for dl_key in dl_keys:
-        print(f' * {dl_key}')
-    '''
-    
-    print(vars(datalink["EPOCH_PHOTOMETRY_RAW.xml"]))
-    
-    
-    
-    
-    
-#mags, mags_errs, periods, periods_errs = get_periods()
+        
+    query = f"SELECT parallax \
+    FROM gaiadr3.gaia_source \
+    WHERE source_id = " + gaiadr3_ids[0] + "\
+    OR source_id = " + gaiadr3_ids[1] + "\
+    OR source_id = " + gaiadr3_ids[2] + "\
+    OR source_id = " + gaiadr3_ids[3] + "\
+    OR source_id = " + gaiadr3_ids[4] + "\
+    OR source_id = " + gaiadr3_ids[5] + "\
+    OR source_id = " + gaiadr3_ids[6] + "\
+    OR source_id = " + gaiadr3_ids[7] + "\
+    OR source_id = " + gaiadr3_ids[8] + "\
+    OR source_id = " + gaiadr3_ids[9] + "\
+    OR source_id = " + gaiadr3_ids[10] + "\
+    OR source_id = " + gaiadr3_ids[11] + "\
+    OR source_id = " + gaiadr3_ids[12] + "\
+    OR source_id = " + gaiadr3_ids[13] + "\
+    OR source_id = " + gaiadr3_ids[14] + "\
+    OR source_id = " + gaiadr3_ids[15] + "\
+    OR source_id = " + gaiadr3_ids[16] + "\
+    OR source_id = " + gaiadr3_ids[17] + "\
+    OR source_id = " + gaiadr3_ids[18] + "\
+    OR source_id = " + gaiadr3_ids[19] + "\
+    OR source_id = " + gaiadr3_ids[20] + "\
+    OR source_id = " + gaiadr3_ids[21] + "\
+    OR source_id = " + gaiadr3_ids[22] + "\
+    OR source_id = " + gaiadr3_ids[23]
 
-get_parallaxes()
+
+    job     = Gaia.launch_job_async(query)
+    results = job.get_results()
+    
+    parallaxes = []
+    
+    for i in range(24):
+        
+        parallaxes = np.append(parallaxes,results['parallax'][i])
+        
+    dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
+    
+    return dist_pc
+
+
+
+        
+
+def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
+    
+    abs_mags = mags - 5 * np.log10(dist_pc) + 5
+    
+    lums = 47.2 * 3.828 * 10 ** 26 * 10 ** (-0.4 * abs_mags)
+    
+    logperiods = np.log10(periods)
+    
+    plt.errorbar(logperiods, lums, xerr=(periods_errs/(periods*np.log(10))), yerr=(0.05*lums), linestyle=" ")
+    
+    plt.show()
+    
+    
+    
+mags, mags_errs, periods, periods_errs = get_periods()
+
+dist_pc = get_parallaxes()
+
+plot_pl(mags, mags_errs, periods, periods_errs, dist_pc)
+
+
 
 
 
