@@ -43,9 +43,11 @@ fourier pages
 
 change plots designs
 
+plot curves +/- error in period
+
 residuals
 
 '''
-
+plot_fourier_grid(objs,periods,True)
 fourier_fitting(obj,period,2,5,True,True,20)
 bounds_plot(obj,period)

@@ -3,6 +3,10 @@ from data_handling import get_data
 from fourier import fourier_fitting
 
 def plot_fourier_grid(objs, periods,folded):
+    f=open('periodmagdata.txt','w')
+    f.write('')
+    f.close()
+
     rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
     if rows>1: #Since plots < 3 are stored in a 1D array, need to handle plotting separately
         figure, ax = plt.subplots(rows,3)  #generate subplots
@@ -63,7 +67,11 @@ def plot_fourier_grid(objs, periods,folded):
 
             smooth_x=np.linspace(times[0], times[-1], 1000)
 
-            fitted_period,fitted_error,reduced_chi,mean_mag,mean_mag_error=fourier_fitting(obj,period,2,5,False,False)
+            fitted_period,fitted_error,reduced_chi,mean_mag,mean_mag_error=fourier_fitting(obj,period,2,5,False,False,20)
+
+            f = open("periodmagdata.txt", "a")
+            f.write(str(mean_mag)+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
+            f.close()
 
             details=obj+'\nFitted Period: '+str(fitted_period)+'+/-'+str(fitted_error)+'\nReduced Chi Squared: '+str(reduced_chi)
 

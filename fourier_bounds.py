@@ -15,7 +15,7 @@ def bounds_plot(obj,period):
         errors.append(error_from_jackknifing)
         chis.append(reduced_chi)
     
-    plt.errorbar(percentage_bounds,periods,yerr=errors,fmt='o')
+    plt.errorbar(percentage_bounds,periods,yerr=errors,fmt='o',c='k',marker='x',capsize=3)
     plt.show()
 
 
