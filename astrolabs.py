@@ -6,6 +6,8 @@ from alias import alias
 from colour_plot import colour_plot
 from fourier_grid import plot_fourier_grid
 from fourier_bounds import *
+from modes_plot import *
+from overfitting import *
 
 df = pd.read_csv('mcmaster.txt')
 
@@ -22,6 +24,8 @@ for j in objs:
             periods.append(i[1])
         
 
+#plot_fourier_grid(objs,periods,True)
+
 obj=input('Select Cepheid: ')
 
 period=0
@@ -37,8 +41,6 @@ RORY TO DO:
 
 chi on number of obs
 
-chi on number of fourier modes
-
 fourier pages
 
 change plots designs
@@ -48,6 +50,4 @@ plot curves +/- error in period
 residuals
 
 '''
-plot_fourier_grid(objs,periods,True)
-fourier_fitting(obj,period,2,5,True,True,20)
-bounds_plot(obj,period)
+overfitted_modes(objs,periods)
