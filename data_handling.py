@@ -10,6 +10,7 @@ def get_data(obj):
     meantimes=[] #storage for data
     meanmags=[]
     meanerrors=[]
+    days=[]
     for date in dates: #iterate through available data
         folder=False
         try:
@@ -20,6 +21,7 @@ def get_data(obj):
         if folder==True:
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
+            days=np.append(days,np.mean(arrays[:,0]))
             meanmags=np.append(meanmags,np.mean(arrays[:,1]))
             mean_in_error=np.mean(arrays[:,2])
             std_in_data=np.std(arrays[:,1])
@@ -28,7 +30,7 @@ def get_data(obj):
             else:    
                 meanerrors=np.append(meanerrors,np.std(arrays[:,1]))
     meantimes-=meantimes[0]
-    return meantimes,meanmags,meanerrors
+    return meantimes,meanmags,meanerrors,days
 
 #INITIAL PLOTS
 def raw_plot(obj):

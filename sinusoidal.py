@@ -2,7 +2,7 @@ from imports import *
 from data_handling import get_data
 
 def sin_fitting(obj,period):
-    times, mags, errors =get_data(obj) #get data for given object
+    times, mags, errors,days =get_data(obj) #get data for given object
 
     amp=1
     period=period

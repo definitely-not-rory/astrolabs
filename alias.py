@@ -5,7 +5,7 @@ from fourier import fourier_fitting
 
 def alias(obj,period,min_period,max_period,steps):
 
-    times, mags, errors =get_data(obj)
+    times, mags, errors,days =get_data(obj)
 
     def sin_function(t,*params):
             '''
@@ -69,14 +69,14 @@ def alias(obj,period,min_period,max_period,steps):
         fourier_chis=np.append(fourier_chis,a_fourier_chi_val)
     
     sin_bound_period=sin_fitting(obj,period)[0]
-    fourier_bound_period=fourier_fitting(obj,period)[0]
+    fourier_bound_period=fourier_fitting(obj,period,2,5,False,False,20)[0]
     upper_bound=1.2*period
     lower_bound=period/1.2
 
     fig,ax=plt.subplots()
     plt.plot(periods,sin_chis,c='r')
     plt.plot(periods,fourier_chis,c='b')
-    ax.axvline(sin_bound_period,c='r',linestyle='dashed')
+    ax.axvline(fourier_bound_period,c='r',linestyle='dashed')
     ax.axvline(sin_bound_period,c='b',linestyle='dashed')
     ax.axvline(upper_bound,c='k',linestyle='dashed')
     ax.axvline(lower_bound,c='k',linestyle='dashed')

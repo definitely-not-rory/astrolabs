@@ -25,8 +25,7 @@ def plot_grid(objs):
                 xaxiscounter+=1 #if in middle of row, progress to next x position
 
         for obj in objs:
-            times, mags, errors =get_data(obj) #get data from given object
-            print(obj+' errors: '+str(errors))
+            times, mags, errors,days =get_data(obj) #get data from given object
             initial_values = [max(mags)-np.mean(mags),0.5,2*np.pi,np.mean(mags)] #setting of trial values for both models
             def sin_function(t,*params):
                 '''
@@ -84,7 +83,7 @@ def plot_grid(objs):
             xaxiscounter+=1
 
         for obj in objs:
-            times, mags, errors =get_data(obj)
+            times, mags, errors,days =get_data(obj)
             markers,bars,caps=ax[xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
 
             initial_values = [max(mags)-np.mean(mags),0.5,2*np.pi,np.mean(mags)] #setting of trial values for both models
