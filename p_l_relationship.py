@@ -42,8 +42,8 @@ def get_parallaxes():
     
     
         
-    query = f"SELECT parallax \
-    FROM gaiadr3.gaia_source \
+    """query = f"SELECT parallax, main_id \
+    FROM gaiadr2.gaia_source \
     WHERE source_id = " + gaiadr3_ids[0] + "\
     OR source_id = " + gaiadr3_ids[1] + "\
     OR source_id = " + gaiadr3_ids[2] + "\
@@ -67,21 +67,24 @@ def get_parallaxes():
     OR source_id = " + gaiadr3_ids[20] + "\
     OR source_id = " + gaiadr3_ids[21] + "\
     OR source_id = " + gaiadr3_ids[22] + "\
-    OR source_id = " + gaiadr3_ids[23]
+    OR source_id = " + gaiadr3_ids[23]"""
 
-
-    job     = Gaia.launch_job_async(query)
-    results = job.get_results()
-    
     parallaxes = []
-    
+
     for i in range(24):
         
-        parallaxes = np.append(parallaxes,results['parallax'][i])
+        query = f"SELECT parallax \
+        FROM gaiadr3.gaia_source \
+        WHERE source_id = " + gaiadr3_ids[i]
+
+        job     = Gaia.launch_job_async(query)
+        results = job.get_results()
+        
+        parallaxes = np.append(parallaxes,results['parallax'])
         
     dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
     
-    return dist_pc[0:8]
+    return dist_pc
 
 
 
@@ -91,7 +94,13 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
     
     abs_mags = mags - 5 * np.log10(dist_pc) + 5
     
-    plt.errorbar(periods, abs_mags, xerr=periods_errs, yerr=(0.05*np.abs(abs_mags) + 0.05), linestyle=" ")
+    plt.errorbar(np.log10(periods), abs_mags, yerr=(0.05*np.abs(abs_mags) + 0.05), linestyle=" ")
+    
+    plt.xlabel(r"$log_{10}$(Period (days))")
+    
+    plt.ylabel("Absolute Magnitude")
+    
+    plt.gca().invert_yaxis()
     
     plt.show()
     
@@ -99,8 +108,8 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
     
 mags, mags_errs, periods, periods_errs = get_periods()
 
-print(mags)
-print(mags_errs)
+#print(mags)
+#print(mags_errs)
 
 dist_pc = get_parallaxes()
 
