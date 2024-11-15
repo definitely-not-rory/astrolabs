@@ -1,39 +1,15 @@
 from imports import *
-from fourier import fourier_fitting
 
 
 
 def get_periods():
     
-    mcmasterperiods = pd.read_csv("mcmaster.txt",delimiter=",")
+    df = pd.read_csv("periodmagdata.txt", delimiter=" ", header=None)
     
-    mcmasterperiods = np.array(mcmasterperiods['period'])
-    
-    objs=next(os.walk('.'))[1]
-    objs = objs[1:-1]
-    
-    mags = []
-    mags_errs = []
-    periods = []
-    periods_errs = []
-    
-    for i in range(len(objs)):
-        
-        period,period_err,reduced_chi,mean_mag,mean_mag_err = fourier_fitting(objs[i],mcmasterperiods[i])
-        
-        mags = np.append(mags,mean_mag)
-        mags_errs = np.append(mags_errs,mean_mag_err)
-        periods = np.append(periods,period)
-        periods_errs = np.append(periods_errs,period_err)
-    
-    
-    """practice_starsdata = pd.read_csv("practice_starsdata.txt", delimiter=" ", header=None)
-    
-    mags = practice_starsdata[0].to_numpy()
-    mags_errs = practice_starsdata[1].to_numpy()
-    periods = practice_starsdata[2].to_numpy()
-    periods_errs = practice_starsdata[3].to_numpy()
-    """
+    mags = df[0].to_numpy()
+    mags_errs = df[1].to_numpy()
+    periods = df[2].to_numpy()
+    periods_errs = df[3].to_numpy()
     
     
     return mags, mags_errs, periods, periods_errs
@@ -105,7 +81,7 @@ def get_parallaxes():
         
     dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
     
-    return dist_pc
+    return dist_pc[0:8]
 
 
 
@@ -115,17 +91,16 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
     
     abs_mags = mags - 5 * np.log10(dist_pc) + 5
     
-    lums = 47.2 * 3.828 * 10 ** 26 * 10 ** (-0.4 * abs_mags)
-    
-    logperiods = np.log10(periods)
-    
-    plt.errorbar(logperiods, lums, xerr=(periods_errs/(periods*np.log(10))), yerr=(0.05*lums), linestyle=" ")
+    plt.errorbar(periods, abs_mags, xerr=periods_errs, yerr=(0.05*np.abs(abs_mags) + 0.05), linestyle=" ")
     
     plt.show()
     
     
     
 mags, mags_errs, periods, periods_errs = get_periods()
+
+print(mags)
+print(mags_errs)
 
 dist_pc = get_parallaxes()
 
