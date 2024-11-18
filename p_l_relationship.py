@@ -1,5 +1,5 @@
 from imports import *
-
+plt.rcParams.update({'font.size': 22})
 
 
 def get_periods():
@@ -70,37 +70,214 @@ def get_parallaxes():
     OR source_id = " + gaiadr3_ids[23]"""
 
     parallaxes = []
+    parallaxes_errs = []
 
-    for i in range(24):
+    for i in range(len(objs)):
         
-        query = f"SELECT parallax \
+        query = f"SELECT parallax, parallax_error \
         FROM gaiadr3.gaia_source \
         WHERE source_id = " + gaiadr3_ids[i]
 
         job     = Gaia.launch_job_async(query)
         results = job.get_results()
         
-        parallaxes = np.append(parallaxes,results['parallax'])
+        parallaxes = np.append(parallaxes,np.float64(results['parallax']))
+        parallaxes_errs = np.append(parallaxes_errs,np.float64(results['parallax_error']))
         
-    dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here
+    dist_pc = 1/(0.001 * parallaxes)                                        #GAIA parallaxes are in mas, convert to arcseconds here7
     
-    return dist_pc
+    dist_pc_errs = (0.001*parallaxes_errs)/((0.001*parallaxes)**2)
+    
+    df = pd.DataFrame({"Distance" : dist_pc,"Error" : dist_pc_errs})
+    
+    df.to_csv('parallax.csv',sep=' ')
+    
+    return dist_pc, dist_pc_errs
 
 
+def read_parallaxes():
+    
+    df = pd.read_csv("parallax.csv",delimiter=" ")
+    
+    dist_pc = df['Distance'].to_numpy()
+    dist_pc_errs = df['Error'].to_numpy()
+    
+    df = pd.read_csv("ddodata.txt", header=None, delimiter=" ")
+    
+    bvcorrection = df[0].to_numpy()
+    
+    print(bvcorrection)
+    
+    return dist_pc, dist_pc_errs, bvcorrection
+
+
+def fitting_model(x, params):
+    return params[0]*np.log10(x) + params[1]
+
+
+def chi_squared(model_params, model, x_data, y_data, y_err):
+    chi_sq = np.sum(((y_data - model(x_data, model_params))/y_err)**2)
+    print(chi_sq)
+    return chi_sq
 
         
 
-def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc):
+def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
     
-    abs_mags = mags - 5 * np.log10(dist_pc) + 5
+    objs=next(os.walk('.'))[1]
+    objs = np.array(objs[1:-1])
     
-    plt.errorbar(np.log10(periods), abs_mags, yerr=(0.05*np.abs(abs_mags) + 0.05), linestyle=" ")
+    abs_mags = (mags - bvcorrection) - 5*np.log10(dist_pc) + 5
     
-    plt.xlabel(r"$log_{10}$(Period (days))")
+    abs_mags_errs = np.sqrt(mags_errs**2 + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
-    plt.ylabel("Absolute Magnitude")
+    sort_index = np.argsort(periods)
     
-    plt.gca().invert_yaxis()
+    abs_mags = abs_mags[sort_index]
+    periods = periods[sort_index]
+    abs_mags_errs = abs_mags_errs[sort_index]
+    periods_errs = periods_errs[sort_index]
+    objs = objs[sort_index]
+    
+    for i in range(len(objs)):
+        if objs[i] == 'v396_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v1467_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v621_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v532_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'kx_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'sw_cas':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v609_cyg':
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+
+    
+    log_periods = np.log10(periods)
+    log_periods_errs = periods_errs/(np.log(10)*periods)
+    
+    fig, axs = plt.subplots(2,1,height_ratios=(3,1))
+    
+    axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ")
+    
+    for i in range(len(objs)):
+        axs[0].text(log_periods[i],abs_mags[i],objs[i])
+    
+    axs[1].set_xlabel(r"$log_{10}$(Period (days))")
+    
+    axs[0].set_ylabel("Absolute Magnitude")
+    
+    axs[0].set_xticklabels([])
+    
+    initial_values = np.array([-1.2,1])
+    
+    print('initial chi^2 = ', end='') # end='' to not start a new line - value printed by chi_squared function
+    initial_chi_squared = chi_squared(initial_values, fitting_model, periods, abs_mags, abs_mags_errs)
+    
+    fit = sp.optimize.minimize(chi_squared, # the function to minimize
+                              initial_values, # where in 'parameter space' to start from
+                              args=(fitting_model, periods, abs_mags, abs_mags_errs)) # model function and data to use
+                             
+    # Termination output message is fit.message - did the minimisation complete successfully?
+    print(fit.message)
+    
+    print('minimised chi-squared = {}'.format(fit.fun))
+    
+    chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
+    
+    degrees_of_freedom = periods.size - fit.x.size # Make sure you understand why!
+    print('DoF = {}'.format(degrees_of_freedom))
+    
+    reduced_chi_squared = chi_squared_min/degrees_of_freedom
+    print('reduced chi^2 = {}'.format(reduced_chi_squared))
+    
+    P_value = sp.stats.chi2.sf(chi_squared_min, degrees_of_freedom)
+    print('P(chi^2_min, DoF) = {}'.format(P_value))
+    
+    print('Slope: ' + str(fit.x[0]))
+    
+    axs[0].yaxis.set_inverted(True)
+    axs[1].yaxis.set_inverted(True)
+    
+    axs[0].sharex(axs[1])
+    
+    smooth_x = np.linspace(np.min(log_periods),np.max(log_periods),101)
+    
+    smooth_y = fit.x[0] * smooth_x + fit.x[1]
+    
+    axs[0].plot(smooth_x, smooth_y, color='red',label='Our fit')
+    
+    gaia_y = -2.2 * smooth_x - 2.05
+    
+    axs[0].plot(smooth_x, gaia_y, color='green', label='Groenewegen (2018)')
+    
+    """fritz_y = -2.43 * smooth_x - 4.05
+    
+    plt.plot(smooth_x, fritz_y, color='blue', label='Fritz (2007)')"""
+    
+    axs[0].legend(loc='best')
+    
+    diff = abs_mags - (fit.x[0]*log_periods + fit.x[1])
+    
+    diff_inerrs = diff/(abs_mags_errs)
+    
+    axs[1].errorbar(log_periods,diff_inerrs,yerr=1,marker='.',linestyle=" ")
+    
+    axs[1].plot(smooth_x,0*smooth_x,color='black')
+    
+    axs[1].set_ylabel("Standard Errors")
+    
+    fig.subplots_adjust(hspace=0)
     
     plt.show()
     
@@ -111,9 +288,11 @@ mags, mags_errs, periods, periods_errs = get_periods()
 #print(mags)
 #print(mags_errs)
 
-dist_pc = get_parallaxes()
+#dist_pc, dist_pc_errs = get_parallaxes()
 
-plot_pl(mags, mags_errs, periods, periods_errs, dist_pc)
+dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
+
+plot_pl(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
 
 
 
