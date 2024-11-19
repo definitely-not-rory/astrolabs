@@ -9,10 +9,12 @@ import math
 import re
 import datetime
 import time
+import random
 import sys
 import warnings
 from astroquery.simbad import Simbad
 from astroquery.gaia import Gaia
+plt.rcParams.update({'font.size': 14})
 warnings.filterwarnings("ignore")
 
 

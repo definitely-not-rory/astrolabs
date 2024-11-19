@@ -52,7 +52,6 @@ def modes_plot(obj,period,modes,show_plots):
                 return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
     
             reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/len(times)
-
             chis.append(reduced_chi)
 
     overfitted=False
