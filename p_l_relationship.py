@@ -106,8 +106,6 @@ def read_parallaxes():
     
     bvcorrection = df[0].to_numpy()
     
-    print(bvcorrection)
-    
     return dist_pc, dist_pc_errs, bvcorrection
 
 
@@ -131,6 +129,8 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     objs=next(os.walk('.'))[1]
     objs = np.array(objs[1:-1])
     
+    print(bvcorrection)
+    
     abs_mags = (mags - bvcorrection) - 5*np.log10(dist_pc) + 5
     
     abs_mags_errs = np.sqrt(mags_errs**2 + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
@@ -142,8 +142,133 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     abs_mags_errs = abs_mags_errs[sort_index]
     periods_errs = periods_errs[sort_index]
     objs = objs[sort_index]
-
     
+    class outlier:
+        abs_mag= []
+        abs_mag_err = []
+        period = []
+        period_err = []
+        log_period = []
+        log_period_err = []
+        obj = []
+        diff_inerr = []
+        
+ 
+    for i in range(len(objs)):
+        if objs[i] == 'v396_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v1467_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v621_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v532_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'kx_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'sw_cas':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v609_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+
+    for i in range(len(objs)):
+        if objs[i] == 'v538_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+
+    outlier.log_period = np.log10(outlier.period)
+    outlier.log_period_err = outlier.period_err/(np.log(10)*outlier.period)
+        
     log_periods = np.log10(periods)
     log_periods_errs = periods_errs/(np.log(10)*periods)
     
@@ -179,31 +304,37 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     diff_inerrs = diff/(abs_mags_errs)
     
-    return objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs
+    outlier.diff_inerr = (outlier.abs_mag - (fit.x[0]*outlier.log_period + fit.x[1]))/outlier.abs_mag_err
+    
+    return objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outlier
     
     
 
 
 
-def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs):
+def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outlier):
     
-    fig, axs = plt.subplots(2,1,height_ratios=(3,1))
+    fig, axs = plt.subplots(2,1,height_ratios=(3,2))
     
     axs[1].set_xlabel(r"$log_{10}$(Period (days))")
     axs[0].set_ylabel("Absolute Magnitude")
     axs[0].set_xticklabels([])
-    axs[1].set_ylim([-5,5])
-    axs[1].set_yticks([-3,0,3],["-3","0","3"])
-    axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ")
+    #axs[1].set_ylim([-5,5])
+    #axs[1].set_yticks([-3,0,3],["-3","0","3"])
+    axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ", marker='s', capsize=5, color="black")
+    axs[0].errorbar(outlier.log_period, outlier.abs_mag, xerr=outlier.log_period_err, yerr=outlier.abs_mag_err, linestyle=" ", marker='s', capsize=5, color="purple")
     axs[0].yaxis.set_inverted(True)
     axs[1].yaxis.set_inverted(True)
     axs[0].sharex(axs[1])
     axs[1].set_ylabel("Standard Errors")
     
     for i in range(len(objs)):
-        axs[0].text(log_periods[i],abs_mags[i],objs[i])
+        axs[0].text(log_periods[i],abs_mags[i],objs[i],size=10)
+        
+    for i in range(len(outlier.obj)):
+        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")
     
-    axs[0].plot(log_periods, smooth_y, color='red',label='Our fit')
+    axs[0].plot(log_periods, smooth_y, color='red', label='Our fit')
     
     gaia_y = -2.2 * log_periods - 2.05
     
@@ -213,9 +344,13 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     
     plt.plot(smooth_x, fritz_y, color='blue', label='Fritz (2007)')"""
     
-    axs[1].errorbar(log_periods,diff_inerrs,yerr=1,marker='.',linestyle=" ")
+    axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='s',linestyle=" ", capsize=5, color="black")
+    
+    axs[1].errorbar(outlier.log_period,outlier.diff_inerr,xerr=outlier.log_period_err,yerr=1,marker='s',linestyle=" ", capsize=5, color="purple")
     
     axs[1].plot(log_periods,0*log_periods,color='black')
+    axs[1].plot(log_periods,(0*log_periods+3),color='gray')
+    axs[1].plot(log_periods,(0*log_periods-3),color='gray')
     
     axs[0].legend(loc='best')
     
@@ -230,11 +365,7 @@ def gaussian(x, xbar, sigma):
 
 def erf(x1, xbar, sigma):
     return sp.integrate.quad(lambda x: gaussian(x, xbar, sigma), -np.inf, x1)[0]
-
-
     
-    
-
 def chauvinet_criterion(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
     cycle = True
     
@@ -273,9 +404,6 @@ def chauvinet_criterion(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc
             
     return objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outliers
         
-        
-    
-    
     
 mags, mags_errs, periods, periods_errs = get_periods()
 
@@ -288,9 +416,9 @@ dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
 
 #objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outliers = chauvinet_criterion(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
 
-objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outlier = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
 
-plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs)
+plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outlier)
 
 
 
