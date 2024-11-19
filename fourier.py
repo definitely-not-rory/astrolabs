@@ -111,6 +111,21 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
         print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
         print('Reduced Chi Squared: '+str(reduced_chi))
 
+        error_up=[popt[0],popt[1],popt[2]+error_from_jackknifing,popt[3],popt[4],popt[5]]
+
+        error_down=[popt[0],popt[1],popt[2]-error_from_jackknifing,popt[3],popt[4],popt[5]]
+
+        plt.figure()
+        plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r')
+        plt.plot(smooth_x,fourier_function(smooth_x, *error_up),c='b',linestyle='dashed')
+        plt.plot(smooth_x,fourier_function(smooth_x, *error_down),c='g',linestyle='dashed')
+        plt.xlabel('Time (days)') 
+        plt.ylabel('Magnitude')
+        plt.gca().invert_yaxis()
+        plt.show()
+
+
     #~~~~~~~~~~~~~ FOLDING ~~~~~~~~~~~~~
 
     folded_times=times
@@ -138,7 +153,9 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     if show_plots==True:
         plt.figure()
         plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r',linestyle='dashed')
+        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='b',linestyle='dashed')
+        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='g',linestyle='dashed')
         if folded_dates==True:
             for i in range(len(date_labels)):
                 plt.text(folded_times[i],mags[i],date_labels[i])

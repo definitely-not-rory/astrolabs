@@ -8,6 +8,8 @@ from fourier_grid import plot_fourier_grid
 from fourier_bounds import *
 from modes_plot import *
 from overfitting import *
+from chionobs import *
+from periodperiod import *
 
 df = pd.read_csv('mcmaster.txt')
 
@@ -24,7 +26,9 @@ for j in objs:
             periods.append(i[1])
         
 
-#plot_fourier_grid(objs,periods,True)
+plot_fourier_grid(objs,periods,True)
+#overfitted_modes(objs,periods)
+#lit_observed_plot(objs,periods)
 
 obj=input('Select Cepheid: ')
 
@@ -36,18 +40,37 @@ for i in arrays:
     
 print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
 
+#chi_obs(obj,period,20)
+
 '''
 RORY TO DO:
 
-chi on number of obs
+SNR on aperture plot
 
 fourier pages
 
 change plots designs
 
-plot curves +/- error in period
-
 residuals
 
+kx_cyg
+v396_cyg
+
+v1467_cyg
+
+mad fitting
+
+report notes:
+period doubling
+1st rung on distance ladder
+2-3 pages of intro/motivation
+obs log appendix - separate legacy data
+shift folding plots to minimum at origin
+heliocentric corrections
+photometry section in method
+colour correction
+light curve appendix
+correlation coefficient for P-L relation
+no error appendix - do within report
+
 '''
-overfitted_modes(objs,periods)

@@ -2,7 +2,7 @@ from imports import *
 from fourier import fourier_fitting
 
 def bounds_plot(obj,period):
-    percentage_bounds=np.linspace(5,100,20)
+    percentage_bounds=np.linspace(5,500,100)
     
     periods=[]
     errors=[]
@@ -16,6 +16,9 @@ def bounds_plot(obj,period):
         chis.append(reduced_chi)
     
     plt.errorbar(percentage_bounds,periods,yerr=errors,fmt='o',c='k',marker='x',capsize=3)
+    plt.xlabel('Percentage of literature period bound used in $\chi^2$ minimisation fitting')
+    plt.ylabel('Fitted Period from $\chi^2$ minimisation fitting')
+    plt.axhline(period,c='r',linestyle='dashed')
     plt.show()
 
 

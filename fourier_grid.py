@@ -90,7 +90,7 @@ def plot_fourier_grid(objs, periods,folded):
 
                 folded_fit_times=np.linspace(0,fitted_period,1000)
                 ax[ycounter][xcounter].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-                ax[ycounter][xcounter].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r',linestyle='dashed')
+                ax[ycounter][xcounter].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
                 ax[ycounter][xcounter].invert_yaxis()
                 ax[ycounter][xcounter].text(min(ax[ycounter][xcounter].get_xlim()),max(ax[ycounter][xcounter].get_ylim()),details)
 
