@@ -120,6 +120,11 @@ def chi_squared(model_params, model, x_data, y_data, y_err):
     print(chi_sq)
     return chi_sq
 
+def mean_absolute_deviation(model_params, model, x_data, y_data, npoints):
+    mad = np.sum(np.abs(y_data - model(x_data, model_params)))/npoints
+    print(mad)
+    return mad
+
         
 
 def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
@@ -219,21 +224,25 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcor
     
     axs[0].set_xticklabels([])
     
-    initial_values = np.array([-1.2,1])
+    axs[1].set_ylim([-5,5])
     
-    print('initial chi^2 = ', end='') # end='' to not start a new line - value printed by chi_squared function
-    initial_chi_squared = chi_squared(initial_values, fitting_model, periods, abs_mags, abs_mags_errs)
+    axs[1].set_yticks([-3,0,3],["-3","0","3"])
     
-    fit = sp.optimize.minimize(chi_squared, # the function to minimize
+    initial_values = np.array([-3,1])
+    
+    print('initial M.A.D = ', end='') # end='' to not start a new line - value printed by mean_absolute_deviation function
+    initial_mad = mean_absolute_deviation(initial_values, fitting_model, periods, abs_mags, len(objs))
+    
+    fit = sp.optimize.minimize(mean_absolute_deviation, # the function to minimize
                               initial_values, # where in 'parameter space' to start from
-                              args=(fitting_model, periods, abs_mags, abs_mags_errs)) # model function and data to use
+                              args=(fitting_model, periods, abs_mags, len(objs))) # model function and data to use
                              
     # Termination output message is fit.message - did the minimisation complete successfully?
     print(fit.message)
     
-    print('minimised chi-squared = {}'.format(fit.fun))
+    print('minimised M.A.D = {}'.format(fit.fun))
     
-    chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
+    """chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
     
     degrees_of_freedom = periods.size - fit.x.size # Make sure you understand why!
     print('DoF = {}'.format(degrees_of_freedom))
@@ -242,7 +251,7 @@ def plot_pl(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcor
     print('reduced chi^2 = {}'.format(reduced_chi_squared))
     
     P_value = sp.stats.chi2.sf(chi_squared_min, degrees_of_freedom)
-    print('P(chi^2_min, DoF) = {}'.format(P_value))
+    print('P(chi^2_min, DoF) = {}'.format(P_value))"""
     
     print('Slope: ' + str(fit.x[0]))
     
