@@ -10,6 +10,7 @@ from modes_plot import *
 from overfitting import *
 from chionobs import *
 from periodperiod import *
+from aperture_photometry_plot import *
 
 df = pd.read_csv('mcmaster.txt')
 
@@ -26,9 +27,10 @@ for j in objs:
             periods.append(i[1])
         
 
-plot_fourier_grid(objs,periods,True)
+#plot_fourier_grid(objs,periods,True)
 #overfitted_modes(objs,periods)
 #lit_observed_plot(objs,periods)
+snr_plot()
 
 obj=input('Select Cepheid: ')
 
@@ -45,20 +47,11 @@ print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
 '''
 RORY TO DO:
 
-SNR on aperture plot
-
 fourier pages
 
 change plots designs
 
 residuals
-
-kx_cyg
-v396_cyg
-
-v1467_cyg
-
-mad fitting
 
 report notes:
 period doubling
