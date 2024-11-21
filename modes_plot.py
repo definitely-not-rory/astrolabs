@@ -51,7 +51,8 @@ def modes_plot(obj,period,modes,show_plots):
             def chi_squared(model_params, model, x_data, y_data, y_err):
                 return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
     
-            reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/len(times)
+            degrees_of_freedom=times.size-popt.size
+            reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/degrees_of_freedom
             chis.append(reduced_chi)
 
     overfitted=False

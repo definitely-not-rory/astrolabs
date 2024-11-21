@@ -58,15 +58,19 @@ def chi_obs(obj,period,trials):
                 def chi_squared(model_params, model, x_data, y_data, y_err):
                     return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
                     
-                reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/len(times)
+                degrees_of_freedom=times.size-popt.size
+                reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/degrees_of_freedom
                 obs.append(len(removed_times))
                 chis.append(reduced_chi)
             except:
                 fittable=False
         runs.append(chis)
-        plt.plot(obs,chis,alpha=0.5)
+        plt.plot(obs,chis,alpha=0.25)
     mean_chis=np.mean(runs,axis=0)
     plt.plot(obs,mean_chis,c='r')
+    plt.yscale('symlog')
+    plt.xlabel('Number of randomly selected data points ( )')
+    plt.ylabel('Reduced $\chi^2$ of Fourier function')
     plt.show()
     
     

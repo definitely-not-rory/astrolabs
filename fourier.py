@@ -35,20 +35,42 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
     fourier_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
 
-    #~~~~~~~~~~~~~ FOURIER FITTING AND PLOT ~~~~~~~~~~~~~
+    #~~~~~~~~~~~~~ FOURIER FITTING ~~~~~~~~~~~~~
 
     popt,cov=sp.optimize.curve_fit(fourier_function,times,mags,sigma=errors,p0=fourier_values,bounds=fourier_bounds,check_finite=True,maxfev=10**6)
 
     smooth_x=np.linspace(times[0], times[-1], 1000)
 
+    #~~~~~~~~~~~~~ RESIDUALS ~~~~~~~~~~~~~
+
+    predictions=[]
+    for i in times:
+        predictions.append(fourier_function(i,*popt))
+    
+    residuals=[]
+    pos=0
+    for val in mags:
+        residuals.append((val-predictions[pos])/errors[pos])
+        pos+=1
+    
+    #~~~~~~~~~~~~~ INITIAL PLOTTING ~~~~~~~~~~~~~
     output_popt=np.round(popt,2)
     if show_plots==True:
-        plt.figure()
-        plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
-        plt.xlabel('Time (days)') 
-        plt.ylabel('Magnitude')
-        plt.gca().invert_yaxis()
+        fig1, axs1 = plt.subplots(2,1,height_ratios=(3,1))
+        axs1[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs1[0].plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
+        axs1[0].set_xlabel('Time (days)') 
+        axs1[0].set_ylabel('Magnitude')
+        axs1[0].invert_yaxis()
+        axs1[1].scatter(times,residuals,c='k',marker='x')
+        axs1[1].set_xlabel('Time (days)')
+        axs1[1].set_ylabel('Normalised Residuals')
+
+        limit=max(abs(np.array(residuals)))+1
+        axs1[1].set_ylim([-limit,limit])
+        axs1[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
+
+        fig1.subplots_adjust(hspace=0)
         plt.show()
 
     #~~~~~~~~~~~~~ CHI SQUARED AND ERRORS FROM CHI SQUARED ~~~~~~~~~~~~~
@@ -56,7 +78,8 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     def chi_squared(model_params, model, x_data, y_data, y_err):
         return np.sum(((y_data - model(x_data, *model_params))/y_err)**2)
     
-    reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/len(times)
+    degrees_of_freedom=times.size-popt.size
+    reduced_chi=chi_squared(popt,fourier_function,times,mags,errors)/degrees_of_freedom
 
     granularity=0.001
     error_period=popt[2]
@@ -95,11 +118,18 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
     if show_plots==True:
         plt.figure()
-        plt.hist(jackknifed_periods)
+        plt.hist(jackknifed_periods,bins=100)
         plt.xlabel('Jackknifed Period (days)')
         plt.show()
         
 
+    mean_percentile=np.percentile(jackknifed_periods,50)
+    negative_percentile=np.percentile(jackknifed_periods,16)
+    positive_percentile=np.percentile(jackknifed_periods,84)
+
+    positive_error=positive_percentile-mean_percentile
+    negative_error=mean_percentile-negative_percentile
+    
     error_from_jackknifing=np.std(jackknifed_periods)
 
     #~~~~~~~~~~~~~ DATA READOUTS ~~~~~~~~~~~~~
@@ -107,30 +137,45 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     if show_plots==True:
         print('Period (days): '+str(popt[2]))
         #print('Error From Chi+1: '+str(chi_plus_1_error))
-        print('Error from Jackknifing: '+str(error_from_jackknifing))
+        print('Positive Error from Jackknifing: '+str(positive_error))
+        print('Bottom Error from Jackknifing: '+str(negative_error))
+        print('Error from Standard Deviation of Jackknifing: '+str(error_from_jackknifing))
         print('Fitted Function: '+str(output_popt[0])+'+'+str(output_popt[1])+'sin(2*pi/'+str(output_popt[2])+'t+'+str(output_popt[3])+')+'+str(output_popt[4])+'sin(5*pi/'+str(output_popt[2])+'t+'+str(output_popt[5])+')')
+        print('Degrees of Freedom: '+str(degrees_of_freedom))
         print('Reduced Chi Squared: '+str(reduced_chi))
 
         error_up=[popt[0],popt[1],popt[2]+error_from_jackknifing,popt[3],popt[4],popt[5]]
 
         error_down=[popt[0],popt[1],popt[2]-error_from_jackknifing,popt[3],popt[4],popt[5]]
 
-        plt.figure()
-        plt.errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        plt.plot(smooth_x,fourier_function(smooth_x, *popt),c='r')
-        plt.plot(smooth_x,fourier_function(smooth_x, *error_up),c='b',linestyle='dashed')
-        plt.plot(smooth_x,fourier_function(smooth_x, *error_down),c='g',linestyle='dashed')
-        plt.xlabel('Time (days)') 
-        plt.ylabel('Magnitude')
-        plt.gca().invert_yaxis()
+        fig2,axs2=plt.subplots(2,1,height_ratios=(3,1))
+        axs2[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs2[0].plot(smooth_x,fourier_function(smooth_x, *popt),c='r')
+        axs2[0].plot(smooth_x,fourier_function(smooth_x, *error_up),c='r',linestyle='dashed',alpha=0.5)
+        axs2[0].plot(smooth_x,fourier_function(smooth_x, *error_down),c='r',linestyle='dashed',alpha=0.5)
+        axs2[0].set_xlabel('Time (days)') 
+        axs2[0].set_ylabel('Magnitude')
+        axs2[0].invert_yaxis()
+
+        axs2[1].scatter(times,residuals,c='k',marker='x')
+        axs2[1].set_xlabel('Time (days)')
+        axs2[1].set_ylabel('Normalised Residuals')
+
+        limit=max(abs(np.array(residuals)))+1
+        axs2[1].set_ylim([-limit,limit])
+        axs2[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
+
+        fig2.subplots_adjust(hspace=0)
         plt.show()
 
 
     #~~~~~~~~~~~~~ FOLDING ~~~~~~~~~~~~~
 
     folded_times=times
+    folded_phase=[]
     for i in range(len(folded_times)):
         folded_times[i]=folded_times[i]%fitted_period
+        folded_phase.append(folded_times[i]/fitted_period)
 
     folded_fit_times=np.linspace(0,fitted_period,1000)
     
@@ -144,6 +189,16 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     currentdate=astro.time.Time(currentdate)
     currentdate-=times[0]
     folded_currentdate=currentdate.mjd%fitted_period
+
+    folded_predictions=[]
+    for i in folded_times:
+        folded_predictions.append(fourier_function(i,*popt))
+    
+    folded_residuals=[]
+    pos=0
+    for val in mags:
+        folded_residuals.append((val-folded_predictions[pos])/errors[pos])
+        pos+=1
     
     date_labels=[]
 
@@ -151,18 +206,30 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
         date_labels.append(str(i.day)+'/'+str(i.month)+'/'+str(i.year))    
 
     if show_plots==True:
-        plt.figure()
-        plt.errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
-        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='b',linestyle='dashed')
-        plt.plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='g',linestyle='dashed')
+        fig3,axs3=plt.subplots(2,1,height_ratios=(3,1))
+        axs3[0].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='r',linestyle='dashed',alpha=0.5)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='r',linestyle='dashed',alpha=0.5)
         if folded_dates==True:
             for i in range(len(date_labels)):
-                plt.text(folded_times[i],mags[i],date_labels[i])
-            plt.axvline(folded_currentdate,c='b',linestyle='dashed')
-        plt.ylabel('Magnitude')
-        plt.xlabel('Time in Period (days)')
-        plt.gca().invert_yaxis()
+                axs3[0].text(folded_times[i],mags[i],date_labels[i])
+            axs3[0].axvline(folded_currentdate,c='b',linestyle='dashed')
+        axs3[0].set_ylabel('Magnitude')
+        axs3[0].set_xlabel('Time in Period (days)')
+        axs3[0].invert_yaxis()
+
+
+        axs3[1].scatter(folded_times,folded_residuals,c='k',marker='x')
+        axs3[1].set_xlabel('Time (days)')
+        axs3[1].set_ylabel('Normalised Residuals')
+
+        limit=max(abs(np.array(folded_residuals)))+1
+        axs3[1].set_ylim([-limit,limit])
+        axs3[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
+
+        fig2.subplots_adjust(hspace=0)
+
         plt.show()
 
     return fitted_period,error_from_jackknifing,reduced_chi,mean_mag, mean_mag_error

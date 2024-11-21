@@ -25,13 +25,9 @@ for j in objs:
     for i in arrays:
         if i[0]==j:
             periods.append(i[1])
-        
 
 #plot_fourier_grid(objs,periods,True)
-#overfitted_modes(objs,periods)
-#lit_observed_plot(objs,periods)
-snr_plot()
-
+        
 obj=input('Select Cepheid: ')
 
 period=0
@@ -39,10 +35,14 @@ period=0
 for i in arrays:
     if i[0]==obj:
         period=i[1]
-    
+
+upper_bound=period*1.2
+lower_bound=period/1.2
+
+
 print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
 
-#chi_obs(obj,period,20)
+fourier_fitting(obj,period,2,5,True,False,20)
 
 '''
 RORY TO DO:
@@ -50,6 +50,8 @@ RORY TO DO:
 fourier pages
 
 change plots designs
+
+change folded axes to phase
 
 residuals
 
