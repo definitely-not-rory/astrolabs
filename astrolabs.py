@@ -19,6 +19,7 @@ arrays=df.to_numpy()
 objs=next(os.walk('.'))[1]
 
 objs=objs[2:-1]
+
 periods=[]
 
 for j in objs:
@@ -39,10 +40,13 @@ for i in arrays:
 upper_bound=period*1.2
 lower_bound=period/1.2
 
+if obj in objs:
+    print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
+    fourier_fitting(obj,period,2,5,True,False,20)
+else:
+    print('This object does not exist')
 
-print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
 
-fourier_fitting(obj,period,2,5,True,False,20)
 
 '''
 RORY TO DO:

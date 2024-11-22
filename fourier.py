@@ -58,17 +58,27 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     if show_plots==True:
         fig1, axs1 = plt.subplots(2,1,height_ratios=(3,1))
         axs1[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        axs1[0].plot(smooth_x,fourier_function(smooth_x, *popt),c='r',linestyle='dashed')
+        axs1[0].plot(smooth_x,fourier_function(smooth_x, *popt),c='r')
         axs1[0].set_xlabel('Time (days)') 
         axs1[0].set_ylabel('Magnitude')
         axs1[0].invert_yaxis()
+        axs1[0].set_xticks([])
         axs1[1].scatter(times,residuals,c='k',marker='x')
         axs1[1].set_xlabel('Time (days)')
         axs1[1].set_ylabel('Normalised Residuals')
 
         limit=max(abs(np.array(residuals)))+1
         axs1[1].set_ylim([-limit,limit])
-        axs1[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
+        #axs1[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
+        ticks1=axs1[1].get_yticks()/2
+        pos=0
+        for i in ticks1:
+            if pos%2==1:
+                axs1[1].axhline(i,c='k',linestyle='dashed',alpha=0.6)
+            else:
+                axs1[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
+            pos+=1
+
 
         fig1.subplots_adjust(hspace=0)
         plt.show()
@@ -148,14 +158,21 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
         error_down=[popt[0],popt[1],popt[2]-error_from_jackknifing,popt[3],popt[4],popt[5]]
 
+        percent_error_up=[popt[0],popt[1],popt[2]+positive_error,popt[3],popt[4],popt[5]]
+
+        percent_error_down=[popt[0],popt[1],popt[2]-negative_error,popt[3],popt[4],popt[5]]
+
         fig2,axs2=plt.subplots(2,1,height_ratios=(3,1))
         axs2[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
         axs2[0].plot(smooth_x,fourier_function(smooth_x, *popt),c='r')
         axs2[0].plot(smooth_x,fourier_function(smooth_x, *error_up),c='r',linestyle='dashed',alpha=0.5)
         axs2[0].plot(smooth_x,fourier_function(smooth_x, *error_down),c='r',linestyle='dashed',alpha=0.5)
+        axs2[0].plot(smooth_x,fourier_function(smooth_x, *percent_error_up),c='b',linestyle='dashed',alpha=0.5)
+        axs2[0].plot(smooth_x,fourier_function(smooth_x, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)
         axs2[0].set_xlabel('Time (days)') 
         axs2[0].set_ylabel('Magnitude')
         axs2[0].invert_yaxis()
+        axs2[0].set_xticks([])
 
         axs2[1].scatter(times,residuals,c='k',marker='x')
         axs2[1].set_xlabel('Time (days)')
@@ -163,8 +180,14 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
         limit=max(abs(np.array(residuals)))+1
         axs2[1].set_ylim([-limit,limit])
-        axs2[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
-
+        ticks2=axs2[1].get_yticks()/2
+        pos=0
+        for i in ticks2:
+            if pos%2==1:
+                axs2[1].axhline(i,c='k',linestyle='dashed',alpha=0.6)
+            else:
+                axs2[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
+            pos+=1
         fig2.subplots_adjust(hspace=0)
         plt.show()
 
@@ -211,6 +234,9 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='r',linestyle='dashed',alpha=0.5)
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='r',linestyle='dashed',alpha=0.5)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_up),c='b',linestyle='dashed',alpha=0.5)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)
+        axs3[0].set_xticks([])
         if folded_dates==True:
             for i in range(len(date_labels)):
                 axs3[0].text(folded_times[i],mags[i],date_labels[i])
@@ -226,9 +252,18 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
         limit=max(abs(np.array(folded_residuals)))+1
         axs3[1].set_ylim([-limit,limit])
-        axs3[1].axhline(0,c='r',linestyle='dashed',alpha=0.6)
 
-        fig2.subplots_adjust(hspace=0)
+        axs3[1].set_ylim([-limit,limit])
+        ticks3=axs3[1].get_yticks()/2
+        pos=0
+        for i in ticks3:
+            if pos%2==1:
+                axs3[1].axhline(i,c='k',linestyle='dashed',alpha=0.6)
+            else:
+                axs3[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
+            pos+=1
+
+        fig3.subplots_adjust(hspace=0)
 
         plt.show()
 
