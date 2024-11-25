@@ -17,7 +17,11 @@ def get_data(obj):
             df = pd.read_csv(obj+'/'+date+'/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
             folder=True
         except:
-            pass
+            try:
+                df = pd.read_csv(obj+'/'+date+'/V/results.diff', delimiter=' ') #read results file outputted from raw2dif.py
+                folder=True
+            except:
+                pass
         if folder==True:
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
