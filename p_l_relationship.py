@@ -346,7 +346,7 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     axs[0].set_xticklabels([])
     #axs[1].set_ylim([-5,5])
     #axs[1].set_yticks([-3,0,3],["-3","0","3"])
-    axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ", marker='s', capsize=5, color="black")
+    axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ", marker='x', capsize=5, color="black")
     #axs[0].errorbar(outlier.log_period, outlier.abs_mag, xerr=outlier.log_period_err, yerr=outlier.abs_mag_err, linestyle=" ", marker='s', capsize=5, color="purple")
     axs[0].yaxis.set_inverted(True)
     axs[1].yaxis.set_inverted(True)
@@ -369,7 +369,7 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     
     plt.plot(smooth_x, fritz_y, color='blue', label='Fritz (2007)')"""
     
-    axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='s',linestyle=" ", capsize=5, color="black")
+    axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='x',linestyle=" ", capsize=5, color="black")
     
     #axs[1].errorbar(outlier.log_period,outlier.diff_inerr,xerr=outlier.log_period_err,yerr=1,marker='s',linestyle=" ", capsize=5, color="purple")
     

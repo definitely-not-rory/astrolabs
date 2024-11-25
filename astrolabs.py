@@ -18,7 +18,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[2:-1]
+objs=objs[1:-1]
 
 periods=[]
 
@@ -27,7 +27,7 @@ for j in objs:
         if i[0]==j:
             periods.append(i[1])
 
-#plot_fourier_grid(objs,periods,True)
+plot_fourier_grid(objs,periods,True)
         
 obj=input('Select Cepheid: ')
 
@@ -42,7 +42,7 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-    fourier_fitting(obj,period,2,5,True,False,20)
+    fourier_fitting(obj,period,2,5,True,True,20)
 else:
     print('This object does not exist')
 

@@ -267,4 +267,4 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
         plt.show()
 
-    return fitted_period,error_from_jackknifing,reduced_chi,mean_mag, mean_mag_error
+    return fitted_period,error_from_jackknifing,reduced_chi,popt[0], mean_mag_error
