@@ -197,48 +197,6 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
             break
         
     for i in range(len(objs)):
-        if objs[i] == 'v532_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'kx_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'sw_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
         if objs[i] == 'v609_cyg':
             outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
             outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
@@ -251,9 +209,25 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
             periods_errs = np.delete(periods_errs,i)
             objs = np.delete(objs,i)
             break
-
+        
+        
     for i in range(len(objs)):
         if objs[i] == 'v538_cyg':
+            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+            outlier.period = np.append(outlier.period,periods[i])
+            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+            outlier.obj = np.append(outlier.obj,objs[i])
+            abs_mags = np.delete(abs_mags,i)
+            periods = np.delete(periods,i)
+            abs_mags_errs = np.delete(abs_mags_errs,i)
+            periods_errs = np.delete(periods_errs,i)
+            objs = np.delete(objs,i)
+            break
+        
+        
+    for i in range(len(objs)):
+        if objs[i] == 'v407_cas':
             outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
             outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
             outlier.period = np.append(outlier.period,periods[i])
@@ -298,15 +272,13 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     print('Slope: ' + str(fit.x[0]))
     
-    smooth_y = fit.x[0] * log_periods + fit.x[1]
-    
     diff = abs_mags - (fit.x[0]*log_periods + fit.x[1])
     
     diff_inerrs = diff/(abs_mags_errs)
     
     #outlier.diff_inerr = (outlier.abs_mag - (fit.x[0]*outlier.log_period + fit.x[1]))/outlier.abs_mag_err
     
-    return objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs
+    return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
     
     
 
@@ -320,16 +292,19 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
         jackknifed_abs_mags = np.delete(abs_mags,i)
         jackknifed_abs_mags_errs = np.delete(abs_mags_errs,i)
         jackknifed_periods = np.delete(periods,i)
-        fit = sp.optimise.curvefit(chi_squared, np.array([-3,1]), args=(fitting_model, jackknifed_periods, jackknifed_abs_mags, jackknifed_abs_mags_errs))
+        initial_values = np.array([-3,1])
+        fit = sp.optimize.minimize(chi_squared,
+                                    initial_values,
+                                    args=(fitting_model, jackknifed_periods, jackknifed_abs_mags, jackknifed_abs_mags_errs))
         
         jackknifed_slopes = np.append(jackknifed_slopes,fit.x[0])
         jackknifed_offsets = np.append(jackknifed_offsets,fit.x[1])
         
-    mean_slope=np.percentile(jackknifed_slopes,50)
-    mean_offset=np.percentile(jackknifed_offsets,50)
+    mean_slope=np.mean(jackknifed_slopes)
+    mean_offset=np.mean(jackknifed_offsets)
     
-    err_slope=np.std(jackknifed_periods)/np.sqrt(len(jackknifed_periods))
-    err_offset=np.std(jackknifed_offsets)/np.sqrt(len(jackknifed_offsets))
+    err_slope=np.std(jackknifed_slopes)
+    err_offset=np.std(jackknifed_offsets)
     
     print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
     print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
@@ -337,9 +312,20 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
     return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
 
 
-def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs):
+
+def jackgen(slope, offset, log_periods):
     
-    fig, axs = plt.subplots(2,1,height_ratios=(3,2))
+    jacky = slope[0] * log_periods + offset[0]
+    
+    return jacky
+
+
+
+def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky):
+    
+    fig, axs = plt.subplots(2,1,height_ratios=(4,3))
+    
+    fig.set_size_inches(12,9)
     
     axs[1].set_xlabel(r"$log_{10}$(Period (days))")
     axs[0].set_ylabel("Absolute Magnitude")
@@ -347,7 +333,7 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     #axs[1].set_ylim([-5,5])
     #axs[1].set_yticks([-3,0,3],["-3","0","3"])
     axs[0].errorbar(log_periods, abs_mags, xerr=log_periods_errs, yerr=abs_mags_errs, linestyle=" ", marker='x', capsize=5, color="black")
-    #axs[0].errorbar(outlier.log_period, outlier.abs_mag, xerr=outlier.log_period_err, yerr=outlier.abs_mag_err, linestyle=" ", marker='s', capsize=5, color="purple")
+    #axs[0].errorbar(outlier.log_period, outlier.abs_mag, xerr=outlier.log_period_err, yerr=outlier.abs_mag_err, linestyle=" ", marker='s', capsize=5, color="purple")       #Outlier
     axs[0].yaxis.set_inverted(True)
     axs[1].yaxis.set_inverted(True)
     axs[0].sharex(axs[1])
@@ -357,9 +343,9 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
         axs[0].text(log_periods[i],abs_mags[i],objs[i],size=10)
         
     """for i in range(len(outlier.obj)):
-        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")"""
+        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
     
-    axs[0].plot(log_periods, smooth_y, color='red', label='Our fit')
+    axs[0].plot(log_periods, jacky, color='blue', label='Our fit')
     
     gaia_y = -2.2 * log_periods - 2.05
     
@@ -371,7 +357,7 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     
     axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='x',linestyle=" ", capsize=5, color="black")
     
-    #axs[1].errorbar(outlier.log_period,outlier.diff_inerr,xerr=outlier.log_period_err,yerr=1,marker='s',linestyle=" ", capsize=5, color="purple")
+    #axs[1].errorbar(outlier.log_period,outlier.diff_inerr,xerr=outlier.log_period_err,yerr=1,marker='s',linestyle=" ", capsize=5, color="purple")           #Outlier
     
     axs[1].plot(log_periods,0*log_periods,color='black')
     #axs[1].plot(log_periods,(0*log_periods+3),color='gray')
@@ -381,73 +367,73 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth
     
     fig.subplots_adjust(hspace=0)
     
+    plt.savefig("plrelationship.png")
+    plt.show()
+    
+
+
+def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
+    
+    linslopes = np.linspace(-4,1,1001)
+    linoffsets = np.linspace(-5,0,1001)
+    
+    slopechis = []
+    offsetchis = []
+    
+    for linslope in linslopes:
+        
+        def linfunc(x, *param):
+            return linslope*x + param[0]
+        
+        fit = sp.optimize.curve_fit(linfunc, log_periods, abs_mags, sigma=abs_mags_errs, absolute_sigma=True, p0=np.array([-3,1]), check_finite=True, maxfev=10**6)
+        
+        print(fit[0][0])
+        
+        minchi = chi_squared(fit[0][0],linfunc,log_periods,abs_mags,abs_mags_errs)
+        
+        slopechis = np.append(slopechis,minchi)
+    
+    
+    for linoffset in linoffsets:
+        
+        def linfunc(x, *param):
+            return param[0]*x + linoffset
+        
+        fit = sp.optimize.curve_fit(linfunc, log_periods, abs_mags, sigma=abs_mags_errs, absolute_sigma=True, p0=np.array([-3,1]), check_finite=True, maxfev=10**6)
+        
+        minchi = chi_squared(fit[0][0],linfunc,log_periods,abs_mags,abs_mags_errs)
+        
+        offsetchis = np.append(offsetchis,minchi)
+        
+    plt.plot(linslopes,slopechis)
+    plt.xlabel("Slope")
+    plt.ylabel("Minimised Chi-Squared")
+    plt.show()
+    plt.plot(linoffsets,offsetchis)
+    plt.xlabel("Offset")
+    plt.ylabel("Minimised Chi-Squared")
     plt.show()
     
     
 
-def gaussian(x, xbar, sigma):
-    return (1/(sigma*np.sqrt(2*np.pi)))*np.exp(-((x-xbar)**2/(2*sigma**2)))
-
-def erf(x1, xbar, sigma):
-    return sp.integrate.quad(lambda x: gaussian(x, xbar, sigma), -np.inf, x1)[0]
-    
-def chauvinet_criterion(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
-    cycle = True
-    
-    outliers = []
-    
-    while cycle == True:
-        
-        objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
-        
-        maxindex = np.argmax(diff_inerrs)
-        
-        print(objs[maxindex])
-        
-        stddev = abs_mags_errs[maxindex]
-        
-        p_out = 0 - (erf((smooth_y[maxindex]+abs_mags[maxindex]),smooth_y[maxindex],stddev) - erf((smooth_y[maxindex]-abs_mags[maxindex]),smooth_y[maxindex],stddev))
-        
-        print(erf((smooth_y[maxindex]+abs_mags[maxindex]),smooth_y[maxindex],stddev))
-        print(erf((smooth_y[maxindex]-abs_mags[maxindex]),smooth_y[maxindex],stddev))
-        
-        n_out = p_out * len(objs)
-        print(n_out)
-        
-        if n_out < 0.5 :
-            outliers = np.append(outliers,objs[maxindex])
-            mags = np.delete(mags,maxindex)
-            mags_errs = np.delete(mags_errs,maxindex)
-            periods = np.delete(periods,maxindex)
-            periods_errs = np.delete(periods_errs,maxindex)
-            dist_pc = np.delete(dist_pc,maxindex)
-            dist_pc_errs = np.delete(dist_pc_errs,maxindex)
-            bvcorrection = np.delete(bvcorrection,maxindex)
-            
-        else:
-            cycle = False
-            
-    return objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outliers
-        
     
 mags, mags_errs, periods, periods_errs = get_periods()
-
-#print(mags)
-#print(mags_errs)
 
 #dist_pc, dist_pc_errs = get_parallaxes()
 
 dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
 
-#objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs, outliers = chauvinet_criterion(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
 
-objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+slope_array, offset_array = jackknifing(abs_mags, abs_mags_errs, periods)
 
-plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, smooth_y, diff_inerrs)
+jacky = jackgen(slope_array, offset_array, log_periods)
+
+plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky)
+
+aliasing(log_periods, abs_mags, abs_mags_errs)
 
 
-
-#print(erf(-1,-2,1))
 
 
 
