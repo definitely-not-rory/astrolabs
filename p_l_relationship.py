@@ -414,6 +414,85 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.ylabel("Minimised Chi-Squared")
     plt.show()
     
+    def linfunc(x, *params):
+            return params[0][0]*x + params[0][1]
+        
+    chi_squared_min = chi_squared([slope[0],offset[0]], linfunc, log_periods, abs_mags, abs_mags_errs)
+    
+    extent = 3.5        #Standard Errors
+    n_points = 220      #Mesh Density
+    
+    p0_range = extent * slope[1]
+    p1_range = extent * offset[1]
+    
+    #Generate grid and data
+    p0_axis = np.linspace(slope[0]-p0_range, slope[0]+p0_range, num=n_points)
+    p1_axis = np.linspace(offset[0]-p1_range, offset[0]+p1_range, num=n_points)
+    plot_data = np.zeros((n_points,n_points))
+    
+    for j, p1_val in enumerate(p1_axis): 
+        for i, p0_val in enumerate(p0_axis): # Nested loops for 'clarity'...
+            plot_data[j][i] = chi_squared([p0_val, p1_val], # function evaluated n_points*n_points times!
+                                        linfunc, 
+                                        log_periods, 
+                                        abs_mags, 
+                                        abs_mags_errs)
+            
+    plt.figure(figsize=(10,8))
+    im = plt.imshow(plot_data, # grid of chi-squared values
+                    extent=(p0_axis[0], p0_axis[-1], # 'x' range
+                            p1_axis[0], p1_axis[-1]), # 'y' range
+                    origin='lower', aspect='auto')
+
+    plt.xlim(slope[0]-p0_range, slope[0]+p0_range) # axis ranges
+    plt.ylim(offset[0]-p1_range, offset[0]+p1_range)
+
+    plt.ylabel('Slope') # Axis labels
+    plt.xlabel('Offset')
+
+    cbar=plt.colorbar(im, orientation='vertical') # Colorbar and label
+    cbar.set_label('$\chi^2$', fontsize=12)
+
+    # Add in best fit point and dashed lines to the axes
+    plt.plot(slope[0], offset[0], 'wo') 
+    plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), # vertical line
+            linestyle='--', color='w')
+    plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), # horizontal line
+            linestyle='--', color='w')
+    plt.savefig("pl_chisquared_heatmap.png")
+    plt.show()
+    
+    X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
+    contour_data = plot_data - chi_squared_min
+
+    levels = [1, 4, 9] # Contour levels in delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard errors
+    plt.figure(figsize=(12,8))
+
+    #Plot and label contours: (comment out labelling to remove text over contours)
+    contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
+    plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$\chi^2 = \chi^2_{min}+%1.0f$') 
+
+    plt.xlabel('Slope') 
+    plt.ylabel('Offset')
+
+    import matplotlib.ticker as ticker # Allows you to modify the tick markers to 
+    xtick_spacing = p0_range/4         # assess the errors from the chi-squared 
+    ytick_spacing = p1_range/4         # contour plots - set as appropriate
+    
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+    ax.xaxis.set_major_formatter('{x:.2f}') # 2 decimal places - may or may not be appropriate!
+
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
+    ax.yaxis.set_major_formatter('{x:.2f}') # 2 decimal places - may or may not be appropriate!
+
+    # Add in best fit point and dashed lines to the axes
+    plt.plot(slope[0], offset[0], 'ro') 
+    plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), linestyle='--', color='r')
+    plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
+    plt.savefig("pl_chisquared_contour.png")
+    plt.show()
+    
     
 
     
@@ -431,7 +510,7 @@ jacky = jackgen(slope_array, offset_array, log_periods)
 
 plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky)
 
-aliasing(log_periods, abs_mags, abs_mags_errs)
+aliasing(log_periods, abs_mags, abs_mags_errs, slope_array, offset_array)
 
 
 
