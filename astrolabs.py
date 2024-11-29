@@ -18,7 +18,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[1:-1]
+objs=objs[2:-1]
 
 periods=[]
 
@@ -27,8 +27,7 @@ for j in objs:
         if i[0]==j:
             periods.append(i[1])
 
-plot_fourier_grid(objs,periods,True)
-        
+    
 obj=input('Select Cepheid: ')
 
 period=0
@@ -42,7 +41,7 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-    fourier_fitting(obj,period,2,5,True,True,20)
+    fourier_fitting(obj,period,1,2,True,False,20)
 else:
     print('This object does not exist')
 
@@ -51,11 +50,14 @@ else:
 '''
 RORY TO DO:
 
-fourier pages
-
-change plots designs
-
 change folded axes to phase
+color corrected vs raw mags
+plot turning points as func of time
+fix color plot bins and axes
+
+fit again using folded data and calced period
+
+MCMC
 
 residuals
 

@@ -79,6 +79,15 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
                 axs1[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
             pos+=1
 
+        fig1.subplots_adjust(right=0.8)
+        
+        fig1hist=fig1.add_axes([0.8,0.11,0.1925,0.1925])
+
+        fig1hist.hist(residuals, orientation='horizontal')
+
+        fig1hist.set_ylim([-limit,limit])
+        fig1hist.set_yticks([])
+
 
         fig1.subplots_adjust(hspace=0)
         plt.show()
@@ -188,6 +197,16 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
             else:
                 axs2[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
             pos+=1
+        
+        fig2.subplots_adjust(right=0.8)
+        
+        fig2hist=fig2.add_axes([0.8,0.11,0.1925,0.1925])
+
+        fig2hist.hist(residuals, orientation='horizontal')
+
+        fig2hist.set_ylim([-limit,limit])
+        fig2hist.set_yticks([])
+
         fig2.subplots_adjust(hspace=0)
         plt.show()
 
@@ -196,12 +215,43 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
     folded_times=times
     folded_phase=[]
+
     for i in range(len(folded_times)):
         folded_times[i]=folded_times[i]%fitted_period
         folded_phase.append(folded_times[i]/fitted_period)
 
-    folded_fit_times=np.linspace(0,fitted_period,1000)
+    def phased_fourier_function(phi, *params):
+        return params[0]+params[1]*np.sin(n1*phi*2*np.pi+params[2])+params[3]*np.sin(n2*phi*2*np.pi+params[4])
     
+    
+    f_mean_mag=np.mean(mags)
+    f_amp1=0.1
+    f_phi1=0
+    f_amp2=0.1
+    f_phi2=0
+
+    folded_fourier_values=[f_mean_mag,f_amp1,f_phi1,f_amp2,f_phi2]
+
+    f_amp1_lo=-np.inf
+    f_amp1_hi=np.inf
+    f_amp2_lo=-np.inf
+    f_amp2_hi=np.inf
+    f_phi1_lo=0
+    f_phi1_hi=2*np.pi
+    f_phi2_lo=0
+    f_phi2_hi=2*np.pi
+    f_disp_lo=np.mean(mags)-1
+    f_disp_hi=np.mean(mags)+1
+
+    folded_fourier_bounds=([f_disp_lo,f_amp1_lo,f_phi1_lo,f_amp2_lo,f_phi2_lo],[f_disp_hi,f_amp1_hi,f_phi1_hi,f_amp2_hi,f_phi2_hi])
+    
+    folded_popt, folded_cov = sp.optimize.curve_fit(phased_fourier_function,folded_phase,mags,sigma=errors,bounds=folded_fourier_bounds,p0=folded_fourier_values,check_finite=True,maxfev=10**6)
+    
+    print(phased_fourier_function(0,*folded_popt))
+    print(phased_fourier_function(1,*folded_popt))
+
+    phases=np.linspace(0,1,1000)
+
     days=np.array(days)
 
     mjd_dates=astro.time.Time(days,format='mjd')
@@ -214,7 +264,7 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     folded_currentdate=currentdate.mjd%fitted_period
 
     folded_predictions=[]
-    for i in folded_times:
+    for i in folded_phase:
         folded_predictions.append(fourier_function(i,*popt))
     
     folded_residuals=[]
@@ -230,25 +280,31 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
     if show_plots==True:
         fig3,axs3=plt.subplots(2,1,height_ratios=(3,1))
-        axs3[0].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+        axs3[0].errorbar(folded_phase,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs3[0].plot(phases,phased_fourier_function(phases,*folded_popt),c='r')
+        '''axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='r',linestyle='dashed',alpha=0.5)
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='r',linestyle='dashed',alpha=0.5)
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_up),c='b',linestyle='dashed',alpha=0.5)
-        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)'''
         axs3[0].set_xticks([])
         if folded_dates==True:
             for i in range(len(date_labels)):
-                axs3[0].text(folded_times[i],mags[i],date_labels[i])
+                axs3[0].text(folded_phase[i],mags[i],date_labels[i])
             axs3[0].axvline(folded_currentdate,c='b',linestyle='dashed')
         axs3[0].set_ylabel('Magnitude')
-        axs3[0].set_xlabel('Time in Period (days)')
+        axs3[0].set_xlabel('$\phi(t-t_0)$')
+        axs3[0].axvline(0,c='b',linestyle='dashed')
+        axs3[0].axvline(1,c='b',linestyle='dashed')
         axs3[0].invert_yaxis()
 
 
-        axs3[1].scatter(folded_times,folded_residuals,c='k',marker='x')
-        axs3[1].set_xlabel('Time (days)')
+        axs3[1].scatter(folded_phase,folded_residuals,c='k',marker='x')
+        axs3[1].set_xlabel('$\phi(t-t_0)$')
         axs3[1].set_ylabel('Normalised Residuals')
+        
+        lims=axs3[0].get_xlim()
+        axs3[1].set_xlim(lims)
 
         limit=max(abs(np.array(folded_residuals)))+1
         axs3[1].set_ylim([-limit,limit])
@@ -262,6 +318,16 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
             else:
                 axs3[1].axhline(i,c='r',linestyle='dashed',alpha=0.6)
             pos+=1
+        
+        fig3.subplots_adjust(right=0.8)
+        
+        fig3hist=fig3.add_axes([0.8,0.11,0.1925,0.1925])
+
+        fig3hist.hist(folded_residuals, orientation='horizontal')
+
+        fig3hist.set_ylim([-limit,limit])
+        fig3hist.set_yticks([])
+
 
         fig3.subplots_adjust(hspace=0)
 

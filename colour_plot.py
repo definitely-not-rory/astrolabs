@@ -11,7 +11,7 @@ def colour_plot(obj,period,n):
             chis[n1-1][n2-1]=fourier_fitting(obj,period,n1,n2,False,False,20)[2]
 
     plt.figure()
-    im=plt.imshow(chis,cmap='plasma',extent=(1,n,1,n),origin='lower')
+    im=plt.imshow(chis,cmap='plasma',extent=(1,n,1,n),origin='lower',norm='log')
     plt.xlabel('$n_1$ coefficient in 2 mode Fourier function')
     plt.ylabel('$n_2$ coefficient in 2 mode Fourier function')
     plt.colorbar(im,label='Reduced $\chi^2$ value of $n_1$, $n_2$ 2 mode Fourier function')

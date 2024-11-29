@@ -7,7 +7,6 @@ def plot_fourier_grid(objs, periods,folded):
     f.write('')
     f.close()
     
-    print(objs)
     
     print(len(periods))
 

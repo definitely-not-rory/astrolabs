@@ -27,19 +27,19 @@ def get_data(obj):
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
             days=np.append(days,np.mean(arrays[:,0]))
             meanmags=np.append(meanmags,np.mean(arrays[:,1]))
-            mean_in_error=np.mean(arrays[:,2])
-            std_in_data=np.std(arrays[:,1])
-            if mean_in_error>std_in_data:
-                meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
-            else:    
-                meanerrors=np.append(meanerrors,np.std(arrays[:,1]))
+            number_obs=len(arrays[:,1])
+            square_sum=0
+            for i in arrays[:,2]:
+                square_sum+=i**2
+            error=np.sqrt(square_sum)/number_obs
+            meanerrors=np.append(meanerrors,error) 
     meantimes-=meantimes[0]
     return meantimes,meanmags,meanerrors,days
 
 #INITIAL PLOTS
 def raw_plot(obj):
     fig, ax=plt.subplots()
-    times, mags, errors =get_data(obj)
+    times, mags, errors, days =get_data(obj)
     markers,bars,caps=ax.errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=3)
     [bar.set_alpha(0.5) for bar in bars]
     [cap.set_alpha(0.5) for cap in caps]
