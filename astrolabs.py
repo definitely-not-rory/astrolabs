@@ -12,6 +12,8 @@ from chionobs import *
 from periodperiod import *
 from aperture_photometry_plot import *
 
+snr_plot()
+
 df = pd.read_csv('mcmaster.txt')
 
 arrays=df.to_numpy()
@@ -29,7 +31,7 @@ for j in objs:
 
     
 
-plot_fourier_grid(objs,periods,True)
+#plot_fourier_grid(objs,periods,True)
         
 obj=input('Select Cepheid: ')
 
@@ -44,7 +46,7 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-    fourier_fitting(obj,period,1,2,True,False,20)
+    fourier_fitting(obj,period,2,5,True,False,20)
 else:
     print('This object does not exist')
 

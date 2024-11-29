@@ -8,7 +8,6 @@ def plot_fourier_grid(objs, periods,folded):
     f.close()
     
     
-    print(len(periods))
 
     rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
     if rows>1: #Since plots < 3 are stored in a 1D array, need to handle plotting separately
