@@ -247,8 +247,8 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     
     folded_popt, folded_cov = sp.optimize.curve_fit(phased_fourier_function,folded_phase,mags,sigma=errors,bounds=folded_fourier_bounds,p0=folded_fourier_values,check_finite=True,maxfev=10**6)
     
-    print(phased_fourier_function(0,*folded_popt))
-    print(phased_fourier_function(1,*folded_popt))
+    print(fourier_function(0,*popt))
+    print(fourier_function(fitted_period,*popt))
 
     phases=np.linspace(0,1,1000)
 
@@ -278,15 +278,16 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     for i in utc:
         date_labels.append(str(i.day)+'/'+str(i.month)+'/'+str(i.year))    
 
+    folded_fit_times=np.linspace(0,fitted_period,1000)
+
     if show_plots==True:
         fig3,axs3=plt.subplots(2,1,height_ratios=(3,1))
-        axs3[0].errorbar(folded_phase,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-        axs3[0].plot(phases,phased_fourier_function(phases,*folded_popt),c='r')
-        '''axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+        axs3[0].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_up),c='r',linestyle='dashed',alpha=0.5)
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times,*error_down),c='r',linestyle='dashed',alpha=0.5)
         axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_up),c='b',linestyle='dashed',alpha=0.5)
-        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)'''
+        axs3[0].plot(folded_fit_times,fourier_function(folded_fit_times, *percent_error_down),c='b',linestyle='dashed',alpha=0.5)
         axs3[0].set_xticks([])
         if folded_dates==True:
             for i in range(len(date_labels)):
@@ -299,8 +300,9 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
         axs3[0].invert_yaxis()
 
 
-        axs3[1].scatter(folded_phase,folded_residuals,c='k',marker='x')
+        axs3[1].scatter(folded_times,folded_residuals,c='k',marker='x')
         axs3[1].set_xlabel('$\phi(t-t_0)$')
+        axs3[1].set_xticks(axs3[1].get_xticks()/fitted_period)
         axs3[1].set_ylabel('Normalised Residuals')
         
         lims=axs3[0].get_xlim()
