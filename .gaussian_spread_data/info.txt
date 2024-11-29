@@ -1,0 +1,10 @@
+Using GW-Cep V-band observations from 29/10/2024
+
+Target star: TYC 4502-724-1
+Vmag: 11.72 +/- 0.14
+
+Cal Star 1: UCAC4 851-002076
+Vmag: 12.137 +/- 0.04
+
+Cal Star 2: UCAC4 851-002064
+Vmag: 11.461 +/- 0.04

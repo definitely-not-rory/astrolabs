@@ -308,163 +308,24 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
         log_period_err = []
         obj = []
         diff_inerr = []
-
-
-    for i in range(len(objs)):
-        if objs[i] == 'v396_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
         
-    for i in range(len(objs)):
-        if objs[i] == 'v1467_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v621_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v609_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v538_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v407_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v432_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v532_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'kx_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v342_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'cd_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
+    
+    kill_list = np.array(["ak_cep","cd_cas","cg_cas","cy_cas","ry_cas","sz_cas","v1467_cyg","v342_cas","v538_cyg","v621_cyg","v609_cyg","vx_cyg"])
+    
+    for j in range(len(kill_list)):
+        for i in range(len(objs)):
+            if objs[i] == kill_list[j]:
+                outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+                outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+                outlier.period = np.append(outlier.period,periods[i])
+                outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+                outlier.obj = np.append(outlier.obj,objs[i])
+                abs_mags = np.delete(abs_mags,i)
+                periods = np.delete(periods,i)
+                abs_mags_errs = np.delete(abs_mags_errs,i)
+                periods_errs = np.delete(periods_errs,i)
+                objs = np.delete(objs,i)
+                break
 
     #outlier.log_period = np.log10(outlier.period)
     #outlier.log_period_err = outlier.period_err/(np.log(10)*outlier.period)

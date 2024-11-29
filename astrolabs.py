@@ -18,7 +18,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[1:-1]
+objs=objs[2:-1]
 
 periods=[]
 
