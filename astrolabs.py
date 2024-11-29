@@ -27,7 +27,8 @@ for j in objs:
         if i[0]==j:
             periods.append(i[1])
 
-#plot_fourier_grid(objs,periods,True)
+
+plot_fourier_grid(objs,periods,True)
         
 obj=input('Select Cepheid: ')
 
