@@ -228,6 +228,8 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     for i in utc:
         date_labels.append(str(i.day)+'/'+str(i.month)+'/'+str(i.year))    
 
+    #literally so rory can fix his code
+    
     if show_plots==True:
         fig3,axs3=plt.subplots(2,1,height_ratios=(3,1))
         axs3[0].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)

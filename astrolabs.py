@@ -29,7 +29,7 @@ for j in objs:
 
 
 plot_fourier_grid(objs,periods,True)
-        
+
 obj=input('Select Cepheid: ')
 
 period=0
