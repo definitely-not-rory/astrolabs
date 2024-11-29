@@ -1,0 +1,331 @@
+read ra/dec for calibration star of: (359.428633, 62.690422) (359.62416, 62.747272)
+automag_driver: using file automag_driver
+aperture parameters; rad, r_in, r_out: 5.0, 15.0, 25.0
+-----------------------------------------
+73
+/mnt//archive/draco2/2020/20_10_08//ad0073.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860171271312949
+x/y of var, cal1, cal2: 553.4688528483849 413.4245333816651 496.80948136094264 312.6586551523465 173.13307880433211 525.5691921470086
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 553.46885 413.42453 ... 6543.4379       170321.39           428.52452
+  2 496.80948 312.65866 ... 6301.0883       32488.909           212.87575
+  3 173.13308 525.56919 ...  6624.221       41144.272           233.70433
+-----------------------------------------
+74
+/mnt//archive/draco2/2020/20_10_08//ad0074.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9861163240153258
+x/y of var, cal1, cal2: 554.867746248773 413.6025877998009 498.1975136579243 312.8439549444046 174.5032541904601 525.716558777016
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 554.86775 413.60259 ... 6461.3545       169827.83           427.75641
+  2 498.19751 312.84395 ... 6461.3545         32790.3           214.33154
+  3 174.50325 525.71656 ... 6784.4223       40944.325            233.9619
+-----------------------------------------
+75
+/mnt//archive/draco2/2020/20_10_08//ad0075.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859987789646045
+x/y of var, cal1, cal2: 555.8925318897924 413.2450193411817 499.2317664726428 312.4731204701077 175.52243154164398 525.3639331257034
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 555.89253 413.24502 ... 6462.8952       168865.98           426.63423
+  2 499.23177 312.47312 ...  6382.109       32548.898           213.39662
+  3 175.52243 525.36393 ... 6705.2538       39671.374           230.88283
+-----------------------------------------
+76
+/mnt//archive/draco2/2020/20_10_08//ad0076.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860145107738062
+x/y of var, cal1, cal2: 555.9311853015716 413.53489367950135 499.27115538981434 312.7682040081532 175.5657239726425 525.6761939643625
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 555.93119 413.53489 ... 6705.0398       167830.26           425.98748
+  2 499.27116  312.7682 ... 6381.9054       33147.707           214.79413
+  3 175.56572 525.67619 ...  6866.607       40717.882            233.8292
+-----------------------------------------
+77
+/mnt//archive/draco2/2020/20_10_08//ad0077.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860810768296152
+x/y of var, cal1, cal2: 555.804068728924 413.86529251870036 499.13700769333076 313.10298716778584 175.4581444107501 525.9827926747641
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 555.80407 413.86529 ... 6542.5892       168138.26           425.96765
+  2 499.13701 313.10299 ... 6542.5892       32600.417           214.26758
+  3 175.45814 525.98279 ... 6704.1346       40518.479           232.70528
+-----------------------------------------
+78
+/mnt//archive/draco2/2020/20_10_08//ad0078.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858970770438056
+x/y of var, cal1, cal2: 556.396624139899 414.0925728259257 499.7448945315677 313.31230855986433 176.0380126958906 526.2366793767517
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 556.39662 414.09257 ... 6545.0315       169684.98           427.78504
+  2 499.74489 313.31231 ... 6302.6229       32188.405           212.17599
+  3 176.03801 526.23668 ... 6706.6372       41034.967            233.8231
+-----------------------------------------
+79
+/mnt//archive/draco2/2020/20_10_08//ad0079.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859121172815487
+x/y of var, cal1, cal2: 556.6157659297508 414.14913971525334 499.95543194882197 313.3717104868837 176.24937473304357 526.300243659234
+ id  xcenter   ycenter  ... aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                             
+--- --------- --------- ... -------- --------------- -------------------
+  1 556.61577 414.14914 ... 6383.231        167531.7           424.88017
+  2 499.95543 313.37171 ... 6383.231       32371.092           212.98487
+  3 176.24937 526.30024 ... 6383.231       39580.874           229.28658
+-----------------------------------------
+80
+/mnt//archive/draco2/2020/20_10_08//ad0080.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859509962584011
+x/y of var, cal1, cal2: 557.1584359625327 413.75743202575416 500.4911437328447 312.97953828999397 176.81881020197545 525.8743242792441
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 557.15844 413.75743 ... 6544.3157       167128.72           424.78506
+  2 500.49114 312.97954 ... 6382.7276       31357.582           210.58974
+  3 176.81881 525.87432 ... 6705.9037       40203.757            232.0357
+-----------------------------------------
+81
+/mnt//archive/draco2/2020/20_10_08//ad0081.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859439926680227
+x/y of var, cal1, cal2: -20274.883281649054 18048.13737837481 -20350.453282651142 17959.341712880563 -20632.433470189506 18234.81396766244
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+82
+/mnt//archive/draco2/2020/20_10_08//ad0082.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858963993306533
+x/y of var, cal1, cal2: -20275.716651205115 18050.701606423416 -20351.269480712665 17961.906260786844 -20633.26198649011 18237.409292388133
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+83
+/mnt//archive/draco2/2020/20_10_08//ad0083.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858304903889716
+x/y of var, cal1, cal2: -20271.75994696095 18050.820568956213 -20347.321925369615 17962.01606324924 -20629.25790721855 18237.525345722028
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+84
+/mnt//archive/draco2/2020/20_10_08//ad0084.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858729638746244
+x/y of var, cal1, cal2: -20274.030073401427 18051.01794031936 -20349.58246805772 17962.22053943295 -20631.551397073537 18237.73026241654
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+85
+/mnt//archive/draco2/2020/20_10_08//ad0085.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860680280686218
+x/y of var, cal1, cal2: -1517.6631381477962 15006.661621466425 -1576.5192671235384 14906.631684292423 -1896.6837187275084 15127.390349972342
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+86
+/mnt//archive/draco2/2020/20_10_08//ad0086.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860141673655909
+x/y of var, cal1, cal2: -1517.0376541550988 15007.329594438093 -1575.8842156982184 14907.292797736774 -1895.9850656415463 15128.05588865673
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+87
+/mnt//archive/draco2/2020/20_10_08//ad0087.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.98597186746915
+x/y of var, cal1, cal2: -1515.8003983036556 15008.058367664999 -1574.6657018908018 14908.016004785586 -1894.8094685404722 15128.781693764942
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+88
+/mnt//archive/draco2/2020/20_10_08//ad0088.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859955197074632
+x/y of var, cal1, cal2: -1514.9536540749089 15007.659969877714 -1573.8216906579785 14907.619898487019 -1893.9444163137334 15128.37966544818
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+89
+/mnt//archive/draco2/2020/20_10_08//ad0089.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859559093961944
+x/y of var, cal1, cal2: -1514.5879051014276 15008.26161646877 -1573.4486926666345 14908.212212428009 -1893.5488707274867 15128.952051546485
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+90
+/mnt//archive/draco2/2020/20_10_08//ad0090.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860096215325114
+x/y of var, cal1, cal2: -1515.4327209284472 15007.784364018775 -1574.2796562320034 14907.746532138197 -1894.3718502127497 15128.507673531803
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+91
+/mnt//archive/draco2/2020/20_10_08//ad0091.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859954883860456
+x/y of var, cal1, cal2: -1513.5235129814132 15008.018206883393 -1572.3966800877424 14907.978728114043 -1892.5315257548468 15128.741879359302
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+92
+/mnt//archive/draco2/2020/20_10_08//ad0092.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858994326533373
+x/y of var, cal1, cal2: -1514.1424956445971 15009.611174849982 -1572.9979496190126 14909.555879682082 -1893.1242681020967 15130.307676161448
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+WARNING: RA/Dec are not in image range
+-----------------------------------------
+93
+/mnt//archive/draco2/2020/20_10_08//ad0093.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9858591757302245
+x/y of var, cal1, cal2: 547.4889975465084 413.15111819702224 490.81563776615616 312.37444273454923 167.05063239429847 525.3496523003339
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1   547.489 413.15112 ... 6545.5348          170013           428.16944
+  2 490.81564 312.37444 ... 6464.7257       32613.843           213.93526
+  3 167.05063 525.34965 ... 6707.1529       40510.761           232.70167
+-----------------------------------------
+94
+/mnt//archive/draco2/2020/20_10_08//ad0094.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859339507828062
+x/y of var, cal1, cal2: 547.7131569793795 413.26683908808525 491.03103587689566 312.4921771480309 167.35005440952625 525.4190807136738
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 547.71316 413.26684 ... 6382.9483        166557.8           423.73187
+  2 491.03104 312.49218 ... 6382.9483       32052.056           212.23325
+  3 167.35005 525.41908 ... 6504.1436        39996.45           230.71571
+-----------------------------------------
+95
+/mnt//archive/draco2/2020/20_10_08//ad0095.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.985737194617057
+x/y of var, cal1, cal2: 547.8278025087795 413.4090213995424 491.14897599410835 312.62334889530723 167.4023808228062 525.6447492128602
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1  547.8278 413.40902 ...  6708.813       168233.19           426.46901
+  2 491.14898 312.62335 ... 6385.4967       33259.388           215.07064
+  3 167.40238 525.64475 ... 6627.9839       39623.215           230.44345
+-----------------------------------------
+96
+/mnt//archive/draco2/2020/20_10_08//ad0096.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859656858520187
+x/y of var, cal1, cal2: 548.6366996518303 413.45112103615685 491.9581008280483 312.6847765839615 168.22582765118176 525.6337972123105
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1  548.6367 413.45112 ... 6544.1207       167982.12           425.78793
+  2  491.9581 312.68478 ... 6301.7458       32255.492           212.32989
+  3 168.22583  525.6338 ... 6624.9123       40276.535           231.84339
+-----------------------------------------
+97
+/mnt//archive/draco2/2020/20_10_08//ad0097.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859693627883314
+x/y of var, cal1, cal2: 549.3007270769792 413.27344655974474 492.62426576285594 312.50607238927637 168.90549584273577 525.4462701635002
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 549.30073 413.27345 ... 6544.0719       168092.94           425.91793
+  2 492.62427 312.50607 ... 6140.1168       32768.854           212.77708
+  3  168.9055 525.44627 ... 6544.0719       40401.369           231.76392
+-----------------------------------------
+98
+/mnt//archive/draco2/2020/20_10_08//ad0098.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.986008044825728
+x/y of var, cal1, cal2: 549.503506669866 413.311807305358 492.8234841586477 312.5423898720556 169.15735848550423 525.4399940197763
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 549.50351 413.31181 ... 6381.9891       164045.72           420.75491
+  2 492.82348 312.54239 ... 6220.4197       31874.621           211.04611
+  3 169.15736 525.43999 ... 6381.9891       39195.818           228.43992
+-----------------------------------------
+99
+/mnt//archive/draco2/2020/20_10_08//ad0099.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9860600460471499
+x/y of var, cal1, cal2: 550.2336776052649 413.65742362301097 493.55294056785306 312.89491487918906 169.8739819428696 525.7903935049131
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 550.23368 413.65742 ... 6300.5398       168896.16           426.28891
+  2 493.55294 312.89491 ... 6219.7637       32198.329           211.80854
+  3 169.87398 525.79039 ... 6623.6444       40069.991           231.39205
+-----------------------------------------
+100
+/mnt//archive/draco2/2020/20_10_08//ad0100.fits
+no flat found.  will not flatfield
+read ra/dec for target of: (359.395668, 62.718246)
+pixel scale is: 0.9859104836471789
+x/y of var, cal1, cal2: 550.2261877569593 413.3649268051234 493.5499560820117 312.5858394147442 169.85687899883322 525.5062256410072
+ id  xcenter   ycenter  ...  aper_bkg aper_sum_bkgsub aper_sum_bkgsub_err
+       pix       pix    ...                                              
+--- --------- --------- ... --------- --------------- -------------------
+  1 550.22619 413.36493 ... 6383.2522       166785.25           424.00089
+  2 493.54996 312.58584 ... 6221.6509       32022.131           211.40112
+  3 169.85688 525.50623 ... 6625.6542       39753.503           230.71587

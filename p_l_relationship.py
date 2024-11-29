@@ -439,20 +439,6 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
             break
         
     for i in range(len(objs)):
-        if objs[i] == 'dd_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
         if objs[i] == 'v342_cas':
             outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
             outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
