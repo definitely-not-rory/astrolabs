@@ -27,7 +27,12 @@ def get_data(obj):
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
             days=np.append(days,np.mean(arrays[:,0]))
             meanmags=np.append(meanmags,np.mean(arrays[:,1]))
-            meanerrors=np.append(meanerrors,np.std(arrays[:,1])) 
+            stdev=np.std(arrays[:,1])
+            meaninerror=np.mean(arrays[:,2])
+            if stdev>meaninerror:
+                meanerrors=np.append(meanerrors,np.std(arrays[:,1])) 
+            else:
+                meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
     meantimes-=meantimes[0]
     return meantimes,meanmags,meanerrors,days
 
