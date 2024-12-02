@@ -47,6 +47,7 @@ lower_bound=period/1.2
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
     print(get_bv(obj))
+    alias(obj,period,period/1.02,period*1.02,1000)
     fourier_fitting(obj,period,2,5,True,False,20)
 else:
     print('This object does not exist')
