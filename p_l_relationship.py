@@ -308,163 +308,24 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
         log_period_err = []
         obj = []
         diff_inerr = []
-
-
-    for i in range(len(objs)):
-        if objs[i] == 'v396_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
         
-    for i in range(len(objs)):
-        if objs[i] == 'v1467_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v621_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v609_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v538_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v407_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v432_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v532_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'kx_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v342_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'cd_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
+    
+    kill_list = np.array(["ak_cep","cd_cas","cg_cas","cy_cas","ry_cas","sz_cas","v1467_cyg","v342_cas","v538_cyg","v621_cyg","v609_cyg","vx_cyg"])
+    
+    for j in range(len(kill_list)):
+        for i in range(len(objs)):
+            if objs[i] == kill_list[j]:
+                outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
+                outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
+                outlier.period = np.append(outlier.period,periods[i])
+                outlier.period_err = np.append(outlier.period_err,periods_errs[i])
+                outlier.obj = np.append(outlier.obj,objs[i])
+                abs_mags = np.delete(abs_mags,i)
+                periods = np.delete(periods,i)
+                abs_mags_errs = np.delete(abs_mags_errs,i)
+                periods_errs = np.delete(periods_errs,i)
+                objs = np.delete(objs,i)
+                break
 
     #outlier.log_period = np.log10(outlier.period)
     #outlier.log_period_err = outlier.period_err/(np.log(10)*outlier.period)
@@ -590,7 +451,6 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     axs[0].legend(loc='best')
     
     fig.subplots_adjust(hspace=0)
-    
     plt.savefig("plrelationship.png")
     plt.show()
     
@@ -639,7 +499,6 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     axs[0].legend(loc='best')
     
     fig.subplots_adjust(hspace=0)
-    
     plt.savefig("plrelationship_sans_outliers.png")
     plt.show()
 
@@ -679,10 +538,12 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot(linslopes,slopechis)
     plt.xlabel("Slope")
     plt.ylabel("Minimised Chi-Squared")
+    plt.tight_layout()
     plt.show()
     plt.plot(linoffsets,offsetchis)
     plt.xlabel("Offset")
     plt.ylabel("Minimised Chi-Squared")
+    plt.tight_layout()
     plt.show()
     
     def linfunc(x, *params):
@@ -731,6 +592,7 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), # horizontal line
             linestyle='--', color='w')
     plt.savefig("pl_chisquared_heatmap.png")
+    plt.tight_layout()
     plt.show()
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
@@ -762,6 +624,7 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), linestyle='--', color='r')
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
     plt.savefig("pl_chisquared_contour.png")
+    plt.tight_layout()
     plt.show()
     
 def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
@@ -800,10 +663,12 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot(linslopes,slopechis)
     plt.xlabel("Slope")
     plt.ylabel("Minimised Chi-Squared")
+    plt.tight_layout()
     plt.show()
     plt.plot(linoffsets,offsetchis)
     plt.xlabel("Offset")
     plt.ylabel("Minimised Chi-Squared")
+    plt.tight_layout()
     plt.show()
     
     def linfunc(x, *params):
@@ -852,6 +717,7 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), # horizontal line
             linestyle='--', color='w')
     plt.savefig("pl_chisquared_heatmap_sans_outliers.png")
+    plt.tight_layout()
     plt.show()
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
@@ -883,6 +749,7 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), linestyle='--', color='r')
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
     plt.savefig("pl_chisquared_contour_sans_outliers.png")
+    plt.tight_layout()
     plt.show()    
 
 
