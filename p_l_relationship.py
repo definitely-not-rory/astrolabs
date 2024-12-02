@@ -1,4 +1,5 @@
 from imports import *
+from data_handling import get_bv
 plt.rcParams.update({'font.size': 22})
 
 
@@ -14,6 +15,46 @@ def get_periods():
     
     return mags, mags_errs, periods, periods_errs
 
+def get_bvcorrection():
+    
+    objs=next(os.walk('.'))[1]
+    objs = objs[2:-1]
+    
+    Vmag = []
+    Bmag = []
+    
+    Verr = []
+    Berr = []
+    
+    for obj in objs:
+        newB, newV = get_bv(obj)
+        
+        newVerr = np.std(newV)
+        newBerr = np.std(newB)
+        
+        newB = np.mean(newB)
+        newV = np.mean(newV)
+        
+        Vmag = np.append(Vmag, newV)
+        Bmag = np.append(Bmag, newB)
+        
+        Verr = np.append(Verr,newVerr)
+        Berr = np.append(Berr,newBerr)
+        
+    bvcorrection = Bmag - Vmag
+    
+    """df = pd.read_csv("intrinsic.txt",delimiter=" ",header=None)
+    spectraltypedata = np.empty((50,2),dtype=str)
+    print(spectraltypedata)
+    for i in range(len(df)):
+        rank = np.array([str(df[0][i]),str(df[1][i])])
+        spectraltypedata[i] = rank
+    
+    print(spectraltypedata)"""
+    
+    bverror = np.sqrt(Verr**2 + Berr**2)
+    
+    return bvcorrection, bverror
 
 def get_parallaxes():
     
@@ -94,7 +135,6 @@ def get_parallaxes():
     
     return dist_pc, dist_pc_errs
 
-
 def read_parallaxes():
     
     df = pd.read_csv("parallax.csv",delimiter=" ")
@@ -104,14 +144,14 @@ def read_parallaxes():
     
     df = pd.read_csv("ddodata.txt", header=None, delimiter=" ")
     
-    bvcorrection = df[0].to_numpy()
+    bvcorrection, bverror = get_bvcorrection()
     
-    return dist_pc, dist_pc_errs, bvcorrection
+    return dist_pc, dist_pc_errs, bvcorrection, bverror
+
 
 
 def fitting_model(x, params):
     return params[0]*np.log10(x) + params[1]
-
 
 def chi_squared(model_params, model, x_data, y_data, y_err):
     chi_sq = np.sum(((y_data - model(x_data, model_params))/y_err)**2)
@@ -124,16 +164,17 @@ def mean_absolute_deviation(model_params, model, x_data, y_data, npoints):
     return mad
 
 
-def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
+
+def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
     
     objs=next(os.walk('.'))[1]
-    objs = np.array(objs[1:-1])
+    objs = np.array(objs[2:-1])
     
     print(bvcorrection)
     
-    abs_mags = (mags - 3.1* bvcorrection) - 5*np.log10(dist_pc) + 5
+    abs_mags = (mags - 0.8 * bvcorrection) - 5*np.log10(dist_pc) + 5
     
-    abs_mags_errs = np.sqrt(mags_errs**2 + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
+    abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
     sort_index = np.argsort(periods)
     
@@ -152,96 +193,6 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
         log_period_err = []
         obj = []
         diff_inerr = []
-
-
-    """for i in range(len(objs)):
-        if objs[i] == 'v396_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v1467_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v621_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v609_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v538_cyg':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break
-        
-        
-    for i in range(len(objs)):
-        if objs[i] == 'v407_cas':
-            outlier.abs_mag = np.append(outlier.abs_mag,abs_mags[i])
-            outlier.abs_mag_err = np.append(outlier.abs_mag_err,abs_mags_errs[i])
-            outlier.period = np.append(outlier.period,periods[i])
-            outlier.period_err = np.append(outlier.period_err,periods_errs[i])
-            outlier.obj = np.append(outlier.obj,objs[i])
-            abs_mags = np.delete(abs_mags,i)
-            periods = np.delete(periods,i)
-            abs_mags_errs = np.delete(abs_mags_errs,i)
-            periods_errs = np.delete(periods_errs,i)
-            objs = np.delete(objs,i)
-            break"""
-
-    #outlier.log_period = np.log10(outlier.period)
-    #outlier.log_period_err = outlier.period_err/(np.log(10)*outlier.period)
         
     log_periods = np.log10(periods)
     log_periods_errs = periods_errs/(np.log(10)*periods)
@@ -283,7 +234,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
 def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
     
     objs=next(os.walk('.'))[1]
-    objs = np.array(objs[1:-1])
+    objs = np.array(objs[2:-1])
     
     print(bvcorrection)
     
@@ -368,6 +319,7 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
     return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
 
 
+
 def jackknifing(abs_mags, abs_mags_errs, periods):
     
     jackknifed_slopes = []
@@ -393,10 +345,18 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
     
     print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
     print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
+    chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
+    degrees_of_freedom = 22
+    reduced_chi_squared = chi_squared_min/degrees_of_freedom
     
+    with open("PLOutputs.txt","w") as f:
+        print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
+        print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
+        print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
+        print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
+        print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        
     return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
-
-
 
 def jackgen(slope, offset, log_periods):
     
@@ -430,15 +390,15 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     """for i in range(len(outlier.obj)):
         axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
     
-    axs[0].plot(log_periods, jacky, color='blue', label='Our fit')
+    axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
     gaia_y = -2.2 * log_periods - 2.05
     
     axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
     
-    """fritz_y = -2.43 * smooth_x - 4.05
+    fritz_y = -2.43 * log_periods - 4.05
     
-    plt.plot(smooth_x, fritz_y, color='blue', label='Fritz (2007)')"""
+    axs[0].plot(log_periods, fritz_y, color='blue', label='Fritz (2007)')
     
     axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='x',linestyle=" ", capsize=5, color="black")
     
@@ -452,6 +412,8 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     
     fig.subplots_adjust(hspace=0)
     plt.savefig("plrelationship.png")
+    print(objs)
+    print(len(objs))
     plt.show()
     
 def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky):
@@ -478,15 +440,15 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     """for i in range(len(outlier.obj)):
         axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
     
-    axs[0].plot(log_periods, jacky, color='blue', label='Our fit')
+    axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
     gaia_y = -2.2 * log_periods - 2.05
     
     axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
     
-    """fritz_y = -2.43 * smooth_x - 4.05
+    fritz_y = -2.43 * log_periods - 4.05
     
-    plt.plot(smooth_x, fritz_y, color='blue', label='Fritz (2007)')"""
+    axs[0].plot(log_periods, fritz_y, color='blue', label='Fritz (2007)')
     
     axs[1].errorbar(log_periods,diff_inerrs,xerr=log_periods_errs,yerr=1,marker='x',linestyle=" ", capsize=5, color="black")
     
@@ -501,6 +463,8 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     fig.subplots_adjust(hspace=0)
     plt.savefig("plrelationship_sans_outliers.png")
     plt.show()
+
+
 
 def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     
@@ -753,11 +717,12 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.show()    
 
 
+
 def pl_gen():    
     mags, mags_errs, periods, periods_errs = get_periods()
     #dist_pc, dist_pc_errs = get_parallaxes()
-    dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
-    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+    dist_pc, dist_pc_errs, bvcorrection, bverror = read_parallaxes()
+    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
     slope_array, offset_array = jackknifing(abs_mags, abs_mags_errs, periods)
     jacky = jackgen(slope_array, offset_array, log_periods)
     plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky)
@@ -782,4 +747,4 @@ def pl_gen_sans_outliers():
 
 
 pl_gen()
-pl_gen_sans_outliers()
+#pl_gen_sans_outliers()
