@@ -34,6 +34,7 @@ def plot_fourier_grid(objs, periods,folded):
         obj_counter=0
         for obj in objs:
             times, mags, errors,days =get_data(obj) #get data from given object
+            print(obj+': '+str(errors))
 
             period=periods[obj_counter]
 

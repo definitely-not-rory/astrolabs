@@ -4,7 +4,7 @@ from data_handling import get_data
 def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
     #~~~~~~~~~~~~~ DATA IMPORT ~~~~~~~~~~~~~
     times,mags,errors,days=get_data(obj)
-
+    print(errors)
 
     #~~~~~~~~~~~~~ FITTING MODEL, PARAMETERS AND BOUNDS ~~~~~~~~~~~~~
     mean_mag=np.mean(mags)

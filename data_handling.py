@@ -27,14 +27,22 @@ def get_data(obj):
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
             days=np.append(days,np.mean(arrays[:,0]))
             meanmags=np.append(meanmags,np.mean(arrays[:,1]))
-            number_obs=len(arrays[:,1])
-            square_sum=0
-            for i in arrays[:,2]:
-                square_sum+=i**2
-            error=np.sqrt(square_sum)/number_obs
-            meanerrors=np.append(meanerrors,error) 
+            meanerrors=np.append(meanerrors,np.std(arrays[:,1])) 
     meantimes-=meantimes[0]
     return meantimes,meanmags,meanerrors,days
+
+def get_bv(obj):
+    bands=os.listdir(obj+'/24_11_22/')
+    for band in bands:
+        df=pd.read_csv(obj+'/24_11_22/'+band+'/results.diff',delimiter=' ')
+        arrays=df.to_numpy()[:,:3]
+        if band=='B':
+            bs=arrays[:,1]
+        else:
+            vs=arrays[:,1]
+    return bs, vs
+            
+
 
 #INITIAL PLOTS
 def raw_plot(obj):
