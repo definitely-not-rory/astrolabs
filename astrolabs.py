@@ -1,5 +1,5 @@
 from imports import *
-from data_handling import get_data, raw_plot
+from data_handling import get_data, raw_plot, get_bv
 from fourier import fourier_fitting
 from sinusoidal import sin_fitting
 from alias import alias
@@ -31,7 +31,7 @@ for j in objs:
 
     
 
-plot_fourier_grid(objs,periods,True)
+#plot_fourier_grid(objs,periods,True)
 
 obj=input('Select Cepheid: ')
 
@@ -46,6 +46,7 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
+    print(get_bv(obj))
     fourier_fitting(obj,period,2,5,True,False,20)
 else:
     print('This object does not exist')

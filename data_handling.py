@@ -33,13 +33,16 @@ def get_data(obj):
 
 def get_bv(obj):
     bands=os.listdir(obj+'/24_11_22/')
-    for band in bands:
-        df=pd.read_csv(obj+'/24_11_22/'+band+'/results.diff',delimiter=' ')
-        arrays=df.to_numpy()[:,:3]
-        if band=='B':
-            bs=arrays[:,1]
-        else:
-            vs=arrays[:,1]
+    try:
+        for band in bands:
+            df=pd.read_csv(obj+'/24_11_22/'+band+'/results.diff',delimiter=' ')
+            arrays=df.to_numpy()[:,:3]
+            if band=='B':
+                bs=arrays[:,1]
+            else:
+                vs=arrays[:,1]
+    except:
+        print('Failed')
     return bs, vs
             
 
