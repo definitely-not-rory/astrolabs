@@ -3,7 +3,7 @@ from data_handling import get_data
 from sinusoidal import sin_fitting
 from fourier import fourier_fitting
 
-def alias(obj,period,min_period,max_period,steps):
+def alias(obj,period,min_period,max_period,steps,show_plots):
 
     times, mags, errors,days =get_data(obj)
 
@@ -72,15 +72,46 @@ def alias(obj,period,min_period,max_period,steps):
     bound_error=fourier_fitting(obj,period,2,5,False,False,20)[1]
     upper_bound=1.2*period
     lower_bound=period/1.2
+    delta_chis=fourier_chis-min(fourier_chis)
 
-    fig,ax=plt.subplots()
-    plt.plot(periods,fourier_chis,c='r')
-    ax.axvline(fourier_bound_period,c='b',linestyle='dashed')
-    ax.axvline(fourier_bound_period-bound_error,c='b',linestyle='dashed',alpha=0.5)
-    ax.axvline(fourier_bound_period+bound_error,c='b',linestyle='dashed',alpha=0.5)
-    ax.axvline(upper_bound,c='k',linestyle='dashed')
-    ax.axvline(lower_bound,c='k',linestyle='dashed')
-    plt.xlabel('Period (days)')
-    plt.ylabel('Chi Squared Value ( )')
-    plt.show()
+    min_index=np.argmin(delta_chis)
+    '''
+    low_pos=min_index
+    found_low_err=False
+    while found_low_err==False:
+        if delta_chis[low_pos]>1:
+              found_low_err=True
+        else:
+              low_pos-=1
+    
+    high_pos=min_index
+    found_high_err=False
+    while found_high_err==False:
+        if delta_chis[high_pos]>1:
+              found_high_err=True
+        else:
+              high_pos+=1
+    
+    low_err=periods[min_index]-periods[low_pos]
+    high_err=periods[high_pos]-periods[min_index]
+
+    print(low_err)
+    print(high_err)'''
+
+    if show_plots==True:
+        fig,ax=plt.subplots()
+        plt.plot(periods,delta_chis,c='r')
+        ax.axvline(fourier_bound_period,c='b',linestyle='dashed')
+        ax.axvline(fourier_bound_period-bound_error,c='b',linestyle='dashed',alpha=0.5)
+        ax.axvline(fourier_bound_period+bound_error,c='b',linestyle='dashed',alpha=0.5)
+        ax.axhline(1,c='g',linestyle='dashed')
+        ax.axvline(min_period,c='k',linestyle='dashed')
+        ax.axvline(max_period,c='k',linestyle='dashed')
+        #ax.axvline(fourier_bound_period-low_err,c='g',linestyle='dashed',alpha=.5)
+        #ax.axvline(fourier_bound_period+high_err,c='g',linestyle='dashed',alpha=.5)
+        plt.ylabel('$\Delta\chi^2$')
+        plt.xlabel('Period (days)')
+        plt.show()
+    #return low_err, high_err
+
 

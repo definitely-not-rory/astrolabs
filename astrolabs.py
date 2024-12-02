@@ -12,7 +12,6 @@ from chionobs import *
 from periodperiod import *
 from aperture_photometry_plot import *
 
-snr_plot()
 
 df = pd.read_csv('mcmaster.txt')
 
@@ -20,7 +19,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[2:-1]
+objs=objs[3:-1]
 
 periods=[]
 
@@ -46,7 +45,6 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-    print(get_bv(obj))
     fourier_fitting(obj,period,2,5,True,False,20)
 else:
     print('This object does not exist')
@@ -61,7 +59,13 @@ color corrected vs raw mags
 plot turning points as func of time
 fix color plot bins and axes
 
+biggest gaps in min and max fit vs data
+then plot min/max difference on biggest diff in sampling in phase
+
 fit again using folded data and calced period
+
+add additional harmonics - look at amplitudes of harmonics
+compare chi squared of additional harmonics to 2 harmonics
 
 MCMC
 

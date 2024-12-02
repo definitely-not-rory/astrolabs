@@ -33,8 +33,8 @@ def plot_fourier_grid(objs, periods,folded):
 
         obj_counter=0
         for obj in objs:
+
             times, mags, errors,days =get_data(obj) #get data from given object
-            print(obj+': '+str(errors))
 
             period=periods[obj_counter]
 
@@ -76,7 +76,7 @@ def plot_fourier_grid(objs, periods,folded):
             f.write(str(mean_mag)+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
             f.close()
 
-            details=obj+'\nFitted Period: '+str(fitted_period)+'+/-'+str(fitted_error)+'\nReduced Chi Squared: '+str(reduced_chi)
+            details=obj+f'\nFitted Period: {fitted_period:.2f}+/-{fitted_error:.1g}\nReduced Chi Squared: {reduced_chi:.2f}'
 
             if folded==False:
                 markers,bars,caps=ax[ycounter][xcounter].errorbar(times,mags,errors,fmt='o',c='r', marker='x',ecolor='k',capsize=2)
