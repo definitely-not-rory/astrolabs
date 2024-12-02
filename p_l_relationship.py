@@ -172,7 +172,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     print(bvcorrection)
     
-    abs_mags = (mags - 3.1 * bvcorrection) - 5*np.log10(dist_pc) + 5
+    abs_mags = (mags - 0.8 * bvcorrection) - 5*np.log10(dist_pc) + 5
     
     abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
