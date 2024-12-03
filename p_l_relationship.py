@@ -354,15 +354,58 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
     print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
     print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
     chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
-    degrees_of_freedom = 22
+    degrees_of_freedom = len(abs_mags) -2
     reduced_chi_squared = chi_squared_min/degrees_of_freedom
     
     with open("PLOutputs.txt","w") as f:
+        print("## All points fitting ##", file=f)
         print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
         print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
         print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        print(" ", file=f)
+        f.close()
+        
+    return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
+
+def jackknifing_a(abs_mags, abs_mags_errs, periods):
+    
+    jackknifed_slopes = []
+    jackknifed_offsets = []
+    
+    for i in range(len(abs_mags)):
+        jackknifed_abs_mags = np.delete(abs_mags,i)
+        jackknifed_abs_mags_errs = np.delete(abs_mags_errs,i)
+        jackknifed_periods = np.delete(periods,i)
+        initial_values = np.array([-3,1])
+        fit = sp.optimize.minimize(chi_squared,
+                                    initial_values,
+                                    args=(fitting_model, jackknifed_periods, jackknifed_abs_mags, jackknifed_abs_mags_errs))
+        
+        jackknifed_slopes = np.append(jackknifed_slopes,fit.x[0])
+        jackknifed_offsets = np.append(jackknifed_offsets,fit.x[1])
+        
+    mean_slope=np.mean(jackknifed_slopes)
+    mean_offset=np.mean(jackknifed_offsets)
+    
+    err_slope=np.std(jackknifed_slopes)
+    err_offset=np.std(jackknifed_offsets)
+    
+    print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
+    print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
+    chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
+    degrees_of_freedom = len(abs_mags) -2
+    reduced_chi_squared = chi_squared_min/degrees_of_freedom
+    
+    with open("PLOutputs.txt","a") as f:
+        print("## Fitting parameters sans overfitting points ##", file=f)
+        print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
+        print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
+        print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
+        print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
+        print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        f.close()
         
     return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
 
@@ -745,7 +788,7 @@ def pl_gen_sans_outliers():
 
     objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
 
-    slope_array, offset_array = jackknifing(abs_mags, abs_mags_errs, periods)
+    slope_array, offset_array = jackknifing_a(abs_mags, abs_mags_errs, periods)
 
     jacky = jackgen(slope_array, offset_array, log_periods)
 
