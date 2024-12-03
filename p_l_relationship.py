@@ -43,14 +43,22 @@ def get_bvcorrection():
         
     bvcorrection = Bmag - Vmag
     
-    """df = pd.read_csv("intrinsic.txt",delimiter=" ",header=None)
-    spectraltypedata = np.empty((50,2),dtype=str)
-    print(spectraltypedata)
-    for i in range(len(df)):
-        rank = np.array([str(df[0][i]),str(df[1][i])])
-        spectraltypedata[i] = rank
+    df = pd.read_csv("intrinsic.txt",delimiter=" ")
+    spectraltypedata = df[["Type","B-V"]].to_numpy()
     
-    print(spectraltypedata)"""
+    Simbad.add_votable_fields("sp_type")
+    
+    for j in range(len(objs)):
+        
+        obj = objs[j]
+        
+        result = Simbad.query_object(obj)
+        
+        for i in range(len(spectraltypedata)):
+            
+            if spectraltypedata[i][0] == result['sp_type'][0]:
+                
+                bvcorrection[j] = bvcorrection[j] - spectraltypedata[i][1]
     
     bverror = np.sqrt(Verr**2 + Berr**2)
     
@@ -59,7 +67,7 @@ def get_bvcorrection():
 def get_parallaxes():
     
     objs=next(os.walk('.'))[1]
-    objs = objs[1:-1]
+    objs = objs[2:-1]
     
     gaiadr3_ids = []
     
@@ -172,7 +180,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     print(bvcorrection)
     
-    abs_mags = (mags - 0.8 * bvcorrection) - 5*np.log10(dist_pc) + 5
+    abs_mags = (mags - 3.1 * bvcorrection) - 5*np.log10(dist_pc) + 5
     
     abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
@@ -231,7 +239,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
     
-def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
+def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
     
     objs=next(os.walk('.'))[1]
     objs = np.array(objs[2:-1])
@@ -240,7 +248,7 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
     
     abs_mags = (mags - 3.1* bvcorrection) - 5*np.log10(dist_pc) + 5
     
-    abs_mags_errs = np.sqrt(mags_errs**2 + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
+    abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
     sort_index = np.argsort(periods)
     
@@ -733,9 +741,9 @@ def pl_gen_sans_outliers():
 
     #dist_pc, dist_pc_errs = get_parallaxes()
 
-    dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
+    dist_pc, dist_pc_errs, bvcorrection, bverror = read_parallaxes()
 
-    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
 
     slope_array, offset_array = jackknifing(abs_mags, abs_mags_errs, periods)
 
@@ -747,4 +755,4 @@ def pl_gen_sans_outliers():
 
 
 pl_gen()
-#pl_gen_sans_outliers()
+pl_gen_sans_outliers()

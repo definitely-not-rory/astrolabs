@@ -19,7 +19,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[3:-1]
+objs=objs[2:-1]
 
 periods=[]
 
@@ -30,7 +30,7 @@ for j in objs:
 
     
 
-#plot_fourier_grid(objs,periods,True)
+plot_fourier_grid(objs,periods,True)
 
 obj=input('Select Cepheid: ')
 
