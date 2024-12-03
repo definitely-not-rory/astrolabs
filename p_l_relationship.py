@@ -1,6 +1,10 @@
 from imports import *
 from data_handling import get_bv
 plt.rcParams.update({'font.size': 22})
+from matplotlib import rc
+#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('font',**{'family':'serif','serif':['Times']})
+rc('text', usetex=True)
 
 
 def get_periods():
@@ -443,9 +447,9 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
-    gaia_y = -2.2 * log_periods - 2.05
+    """gaia_y = -2.2 * log_periods - 2.05
     
-    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
+    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')"""
     
     fritz_y = -2.43 * log_periods - 4.05
     
@@ -493,9 +497,9 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
-    gaia_y = -2.2 * log_periods - 2.05
+    """gaia_y = -2.2 * log_periods - 2.05
     
-    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
+    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')"""
     
     fritz_y = -2.43 * log_periods - 4.05
     
