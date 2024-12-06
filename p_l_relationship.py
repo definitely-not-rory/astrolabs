@@ -563,12 +563,6 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     axs[0].sharex(axs[1])
     axs[1].set_ylabel("Standard Errors")
     
-    for i in range(len(objs)):
-        axs[0].text(log_periods[i],abs_mags[i],objs[i],size=10)
-        
-    """for i in range(len(outlier.obj)):
-        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
-    
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
     """gaia_y = -2.2 * log_periods - 2.05
@@ -612,12 +606,6 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     axs[1].yaxis.set_inverted(True)
     axs[0].sharex(axs[1])
     axs[1].set_ylabel("Standard Errors")
-    
-    for i in range(len(objs)):
-        axs[0].text(log_periods[i],abs_mags[i],objs[i],size=10)
-        
-    """for i in range(len(outlier.obj)):
-        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
     
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
@@ -1040,7 +1028,7 @@ def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     plt.show()
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
-    contour_data = plot_data - chi_squared_min
+    contour_data = plot_data - ssr_min
 
     levels = [1, 4, 9] # Contour levels in delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard errors
     plt.figure(figsize=(12,8))

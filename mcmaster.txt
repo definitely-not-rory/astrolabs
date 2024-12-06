@@ -1,5 +1,5 @@
 star,period,mean_mag
-ak_cep,7.23268,13.17
+ak_cep,7.23268,10.86
 cd_cas,7.80089,10.64
 cf_cas,4.87522,10.80
 cg_cas,4.36554,11.28
