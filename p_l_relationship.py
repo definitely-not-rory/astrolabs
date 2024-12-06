@@ -1,6 +1,10 @@
 from imports import *
 from data_handling import get_bv
 plt.rcParams.update({'font.size': 22})
+from matplotlib import rc
+#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('font',**{'family':'serif','serif':['Times']})
+rc('text', usetex=True)
 
 
 def get_periods():
@@ -43,14 +47,22 @@ def get_bvcorrection():
         
     bvcorrection = Bmag - Vmag
     
-    """df = pd.read_csv("intrinsic.txt",delimiter=" ",header=None)
-    spectraltypedata = np.empty((50,2),dtype=str)
-    print(spectraltypedata)
-    for i in range(len(df)):
-        rank = np.array([str(df[0][i]),str(df[1][i])])
-        spectraltypedata[i] = rank
+    df = pd.read_csv("intrinsic.txt",delimiter=" ")
+    spectraltypedata = df[["Type","B-V"]].to_numpy()
     
-    print(spectraltypedata)"""
+    Simbad.add_votable_fields("sp_type")
+    
+    for j in range(len(objs)):
+        
+        obj = objs[j]
+        
+        result = Simbad.query_object(obj)
+        
+        for i in range(len(spectraltypedata)):
+            
+            if spectraltypedata[i][0] == result['sp_type'][0]:
+                
+                bvcorrection[j] = bvcorrection[j] - spectraltypedata[i][1]
     
     bverror = np.sqrt(Verr**2 + Berr**2)
     
@@ -59,7 +71,7 @@ def get_bvcorrection():
 def get_parallaxes():
     
     objs=next(os.walk('.'))[1]
-    objs = objs[1:-1]
+    objs = objs[2:-1]
     
     gaiadr3_ids = []
     
@@ -172,7 +184,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     print(bvcorrection)
     
-    abs_mags = (mags - 0.8 * bvcorrection) - 5*np.log10(dist_pc) + 5
+    abs_mags = (mags - 3.1 * bvcorrection) - 5*np.log10(dist_pc) + 5
     
     abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
@@ -231,7 +243,7 @@ def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvc
     
     return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
     
-def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection):
+def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
     
     objs=next(os.walk('.'))[1]
     objs = np.array(objs[2:-1])
@@ -240,7 +252,7 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
     
     abs_mags = (mags - 3.1* bvcorrection) - 5*np.log10(dist_pc) + 5
     
-    abs_mags_errs = np.sqrt(mags_errs**2 + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
+    abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
     
     sort_index = np.argsort(periods)
     
@@ -346,15 +358,58 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
     print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
     print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
     chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
-    degrees_of_freedom = 22
+    degrees_of_freedom = len(abs_mags) -2
     reduced_chi_squared = chi_squared_min/degrees_of_freedom
     
     with open("PLOutputs.txt","w") as f:
+        print("## All points fitting ##", file=f)
         print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
         print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
         print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        print(" ", file=f)
+        f.close()
+        
+    return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
+
+def jackknifing_a(abs_mags, abs_mags_errs, periods):
+    
+    jackknifed_slopes = []
+    jackknifed_offsets = []
+    
+    for i in range(len(abs_mags)):
+        jackknifed_abs_mags = np.delete(abs_mags,i)
+        jackknifed_abs_mags_errs = np.delete(abs_mags_errs,i)
+        jackknifed_periods = np.delete(periods,i)
+        initial_values = np.array([-3,1])
+        fit = sp.optimize.minimize(chi_squared,
+                                    initial_values,
+                                    args=(fitting_model, jackknifed_periods, jackknifed_abs_mags, jackknifed_abs_mags_errs))
+        
+        jackknifed_slopes = np.append(jackknifed_slopes,fit.x[0])
+        jackknifed_offsets = np.append(jackknifed_offsets,fit.x[1])
+        
+    mean_slope=np.mean(jackknifed_slopes)
+    mean_offset=np.mean(jackknifed_offsets)
+    
+    err_slope=np.std(jackknifed_slopes)
+    err_offset=np.std(jackknifed_offsets)
+    
+    print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
+    print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
+    chi_squared_min = chi_squared([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, abs_mags_errs)
+    degrees_of_freedom = len(abs_mags) -2
+    reduced_chi_squared = chi_squared_min/degrees_of_freedom
+    
+    with open("PLOutputs.txt","a") as f:
+        print("## Fitting parameters sans overfitting points ##", file=f)
+        print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
+        print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
+        print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
+        print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
+        print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        f.close()
         
     return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
 
@@ -392,9 +447,9 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
-    gaia_y = -2.2 * log_periods - 2.05
+    """gaia_y = -2.2 * log_periods - 2.05
     
-    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
+    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')"""
     
     fritz_y = -2.43 * log_periods - 4.05
     
@@ -442,9 +497,9 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     
     axs[0].plot(log_periods, jacky, color='red', label='Our fit')
     
-    gaia_y = -2.2 * log_periods - 2.05
+    """gaia_y = -2.2 * log_periods - 2.05
     
-    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')
+    axs[0].plot(log_periods, gaia_y, color='green', label='Groenewegen (2018)')"""
     
     fritz_y = -2.43 * log_periods - 4.05
     
@@ -733,11 +788,11 @@ def pl_gen_sans_outliers():
 
     #dist_pc, dist_pc_errs = get_parallaxes()
 
-    dist_pc, dist_pc_errs, bvcorrection = read_parallaxes()
+    dist_pc, dist_pc_errs, bvcorrection, bverror = read_parallaxes()
 
-    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection)
+    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
 
-    slope_array, offset_array = jackknifing(abs_mags, abs_mags_errs, periods)
+    slope_array, offset_array = jackknifing_a(abs_mags, abs_mags_errs, periods)
 
     jacky = jackgen(slope_array, offset_array, log_periods)
 
@@ -747,4 +802,4 @@ def pl_gen_sans_outliers():
 
 
 pl_gen()
-#pl_gen_sans_outliers()
+pl_gen_sans_outliers()

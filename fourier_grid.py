@@ -7,7 +7,8 @@ def plot_fourier_grid(objs, periods,folded):
     f.write('')
     f.close()
     
-    
+    df = pd.read_csv("mcmaster.txt",delimiter=",")
+    averagemags = df["mean_mag"].to_numpy()
 
     rows=math.ceil(len(objs)/3) #obtain rows needed to generate 3xhowever many grid
     if rows>1: #Since plots < 3 are stored in a 1D array, need to handle plotting separately
@@ -38,7 +39,8 @@ def plot_fourier_grid(objs, periods,folded):
 
             period=periods[obj_counter]
 
-            mean_mag=np.mean(mags)
+            #mean_mag=np.mean(mags)
+            mean_mag = averagemags[obj_counter]
             mean_mag_error=np.std(mags)/(np.sqrt(len(mags)))
             amp1=1
             period=period
@@ -61,8 +63,8 @@ def plot_fourier_grid(objs, periods,folded):
             phi1_hi=2*np.pi
             phi2_lo=0
             phi2_hi=2*np.pi
-            disp_lo=np.mean(mags)-1
-            disp_hi=np.mean(mags)+1
+            disp_lo=mean_mag-1
+            disp_hi=mean_mag+1
 
             fourier_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
 
@@ -73,7 +75,7 @@ def plot_fourier_grid(objs, periods,folded):
             fitted_period,fitted_error,reduced_chi,mean_mag,mean_mag_error=fourier_fitting(obj,period,2,5,False,False,20)
 
             f = open("periodmagdata.txt", "a")
-            f.write(str(mean_mag)+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
+            f.write(str(popt[0])+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
             f.close()
 
             details=obj+f'\nFitted Period: {fitted_period:.2f}+/-{fitted_error:.1g}\nReduced Chi Squared: {reduced_chi:.2f}'

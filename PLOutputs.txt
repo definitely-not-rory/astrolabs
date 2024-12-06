@@ -1,5 +1,13 @@
-Slope: -0.7786608023565816 +/- 0.12177957497332367
-Offset: -2.1274220273825453 +/- 0.10387284480669616
-Minimised Chi-Squared: 330.6478688857312
+## All points fitting ##
+Slope: -2.117986741266576 +/- 0.18295785177841417
+Offset: -3.644020291235869 +/- 0.17699912586220093
+Minimised Chi-Squared: 831.5358968918534
 Degrees of Freedom: 22
-Reduced Chi-Squared: 15.029448585715055
+Reduced Chi-Squared: 37.797086222356974
+ 
+## Fitting parameters sans overfitting points ##
+Slope: -2.0193622293309175 +/- 0.5237700315528037
+Offset: -3.784330252082191 +/- 0.4761622697707239
+Minimised Chi-Squared: 686.9432496813055
+Degrees of Freedom: 10
+Reduced Chi-Squared: 68.69432496813054
