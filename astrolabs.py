@@ -54,6 +54,8 @@ else:
 '''
 RORY TO DO:
 
+take median zpt error as min mag error
+
 change folded axes to phase
 color corrected vs raw mags
 plot turning points as func of time
@@ -62,17 +64,12 @@ fix color plot bins and axes
 biggest gaps in min and max fit vs data
 then plot min/max difference on biggest diff in sampling in phase
 
-fit again using folded data and calced period
 
-add additional harmonics - look at amplitudes of harmonics
-compare chi squared of additional harmonics to 2 harmonics
 
 MCMC
 
-residuals
-
 report notes:
-period doubling
+period doubling - continual obs around peaks
 1st rung on distance ladder
 2-3 pages of intro/motivation
 obs log appendix - separate legacy data

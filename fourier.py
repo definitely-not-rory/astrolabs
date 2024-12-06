@@ -356,14 +356,14 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
 
     #~~~~~~~~~~~~~ MULTIPLE HARMONICS ~~~~~~~~~~~~~
 
-    possible_harmonics=math.floor(len(times)/2-1)
-    print(possible_harmonics)
-
+    possible_harmonics=math.floor(len(times)/2-2)
+    print(obj+' Possible Harmonics: '+str(possible_harmonics))
+    
     def multiharmonics(t, *params):
         period=params[0]
         func=params[1]+params[2]*np.cos((2*np.pi/period)*t+params[3])
         for harmonic in range(2,(int(len(params)/2))):
-            func+=params[2*harmonic]*np.cos(2*np.pi/period)*harmonic*t+params[2*harmonic+1]
+            func+=params[2*harmonic]*np.cos((2*np.pi/period)*harmonic*t+params[2*harmonic+1])
         return func
 
     def generate_harmonic_vals(n):
@@ -399,20 +399,71 @@ def fourier_fitting(obj,period,n1,n2,show_plots,folded_dates,bound_percentage):
         
         return (harmonic_low_bounds,harmonic_high_bounds)
     
-    fig4, axs4=plt.subplots(2,1)
-    fit_times=np.linspace(times[0],times[-1],1000)
-    axs4[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-    axs4[0].plot(fit_times,fourier_function(fit_times,*popt),c='r')
-    axs4[1].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
-    axs4[1].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+
+    if show_plots==True:
+        fig4, axs4=plt.subplots(2,1)
+        fit_times=np.linspace(times[0],times[-1],1000)
+        axs4[0].errorbar(times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs4[0].plot(fit_times,fourier_function(fit_times,*popt),c='r')
+        axs4[1].errorbar(folded_times,mags,yerr=errors,marker='x',linestyle='None',c='k',capsize=3)
+        axs4[1].plot(folded_fit_times,fourier_function(folded_fit_times,*popt),c='r')
+
     chis=[reduced_chi]
+    harmonic_periods=[fitted_period]
+    harmonic_period_errors=[error_from_jackknifing]
+    harmonics=range(2,possible_harmonics+1)
+
     for n in range(3,possible_harmonics+1):
-        
         harmonic_popt,harmonic_cov=sp.optimize.curve_fit(multiharmonics,times,mags,sigma=errors,p0=generate_harmonic_vals(n),bounds=generate_harmonic_bounds(n),check_finite=True,maxfev=10**6)   
-        axs4[0].plot(fit_times,multiharmonics(fit_times,*harmonic_popt))
-        axs4[1].plot(folded_fit_times,multiharmonics(folded_fit_times,*harmonic_popt),label='n='+str(n))
-    axs4[1].legend()
-    plt.show()
+        reduced_harmonic_chi=chi_squared(harmonic_popt,multiharmonics,times,mags,errors)/degrees_of_freedom
+
+        chis.append(reduced_harmonic_chi)
+        harmonic_periods.append(harmonic_popt[0])
+
+        jackknifed_harmonic_periods=[]
+
+        for i in range(len(times)):
+            jackknifed_mags=np.delete(mags,i)
+            jackknifed_times=np.delete(times,i)
+            jackknifed_errors=np.delete(errors,i)
+
+            jackknifed_period=sp.optimize.curve_fit(multiharmonics,jackknifed_times,jackknifed_mags,sigma=jackknifed_errors,p0=generate_harmonic_vals(n),bounds=generate_harmonic_bounds(n),check_finite=True,maxfev=10**6)[0][0]
+
+            jackknifed_harmonic_periods.append(jackknifed_period)
+        
+        harmonic_mean_percentile=np.percentile(jackknifed_harmonic_periods,50)
+        harmonic_negative_percentile=np.percentile(jackknifed_harmonic_periods,16)
+        harmonic_positive_percentile=np.percentile(jackknifed_harmonic_periods,84)
+
+        harmonic_positive_error=harmonic_positive_percentile-harmonic_mean_percentile
+        harmonic_negative_error=harmonic_mean_percentile-harmonic_negative_percentile
+        
+        harmonic_error_from_jackknifing=np.std(jackknifed_harmonic_periods)
+
+
+
+        if show_plots==True:
+            if reduced_harmonic_chi>1:
+                axs4[0].plot(fit_times,multiharmonics(fit_times,*harmonic_popt),alpha=0.5)
+                print(f'Period Calculated by {n} Harmonic Fit: {harmonic_popt[0]}')
+                print(f'Error Assuming Gaussian Jackknifing Distribution: {harmonic_error_from_jackknifing}')
+                print(f'Errors Assuming Non-Gaussian Jackknifing Distribution:\nPositive: {harmonic_positive_error}\nNegative: {harmonic_negative_error}')
+                print(f'Reduced Chi Squared for {n} Harmonics: {reduced_harmonic_chi:.2f}')
+                axs4[1].plot(folded_fit_times,multiharmonics(folded_fit_times,*harmonic_popt),label='n='+str(n),alpha=0.5)
+
+    if show_plots==True:
+        axs4[1].legend()
+        axs4[0].invert_yaxis()
+        axs4[1].invert_yaxis()
+        plt.show()
+
+        fig5,axs5=plt.subplots()
+        ns=range(2,possible_harmonics+1)
+        axs5.scatter(ns,chis,marker='x',linestyle='None',c='k')
+        axs5.axhline(1,c='r',linestyle='dashed')
+        axs5.set_xlabel('Number of fitted Fourier harmonics of the form $A_n\cos(n\\frac{2\pi}{T}t+\phi_n)$')
+        axs5.set_ylabel('Reduced $\chi^2$ value for fitted data')
+        plt.show()
 
 
     return fitted_period,error_from_jackknifing,reduced_chi,popt[0], mean_mag_error

@@ -1,5 +1,6 @@
 #IMPORTS
 from imports import *
+from min_error_calcs import *
 
 #DATA PROCESSING
 def get_data(obj):
@@ -24,15 +25,19 @@ def get_data(obj):
                 pass
         if folder==True:
             arrays=df.to_numpy()[:,:3] #remove NaN values (idk why they're there)
+            min_error=get_min_error()
             meantimes=np.append(meantimes,np.mean(arrays[:,0]))
             days=np.append(days,np.mean(arrays[:,0]))
             meanmags=np.append(meanmags,np.mean(arrays[:,1]))
             stdev=np.std(arrays[:,1])
             meaninerror=np.mean(arrays[:,2])
             if stdev>meaninerror:
-                meanerrors=np.append(meanerrors,np.std(arrays[:,1])) 
+                error=np.std(arrays[:,1])
             else:
-                meanerrors=np.append(meanerrors,np.mean(arrays[:,2]))
+                error=np.mean(arrays[:,2])
+            if error<min_error:
+                error=min_error
+            meanerrors=np.append(meanerrors,error)
     meantimes-=meantimes[0]
     return meantimes,meanmags,meanerrors,days
 
