@@ -41,7 +41,7 @@ def plot_fourier_grid(objs, periods,folded):
 
             #mean_mag=np.mean(mags)
             mean_mag = averagemags[obj_counter]
-            mean_mag_error=np.std(mags)/(np.sqrt(len(mags)))
+            #mean_mag_error=np.std(mags)/(np.sqrt(len(mags)))
             amp1=1
             period=period
             phi1=np.pi
@@ -67,15 +67,26 @@ def plot_fourier_grid(objs, periods,folded):
             disp_hi=mean_mag+1
 
             fourier_bounds=([disp_lo,amp1_lo,p_lo,phi1_lo,amp2_lo,phi2_lo],[disp_hi,amp1_hi,p_hi,phi1_hi,amp2_hi,phi2_hi])
-
+            
+            jackknifed_mean_mags = []
+            for i in range(len(times)):
+                jackknifed_times = np.delete(times,i)
+                jackknifed_mags = np.delete(mags,i)
+                jackknifed_errors = np.delete(errors,i)
+                popt,cov=sp.optimize.curve_fit(fourier_function,jackknifed_times,jackknifed_mags,sigma=jackknifed_errors,p0=fourier_values,bounds=fourier_bounds,check_finite=True,maxfev=10**6)
+                jackknifed_mean_mags = np.append(jackknifed_mean_mags,popt[0])
+                
             popt,cov=sp.optimize.curve_fit(fourier_function,times,mags,sigma=errors,p0=fourier_values,bounds=fourier_bounds,check_finite=True,maxfev=10**6)
+            
+            mean_mag = popt[0]
+            mean_mag_error = np.std(jackknifed_mean_mags)
 
             smooth_x=np.linspace(times[0], times[-1], 1000)
 
             fitted_period,fitted_error,reduced_chi,mean_mag,mean_mag_error=fourier_fitting(obj,period,2,5,False,False,20)
 
             f = open("periodmagdata.txt", "a")
-            f.write(str(popt[0])+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
+            f.write(str(mean_mag)+' '+str(mean_mag_error)+' '+str(fitted_period)+' '+str(fitted_error)+'\n')
             f.close()
 
             details=obj+f'\nFitted Period: {fitted_period:.2f}+/-{fitted_error:.1g}\nReduced Chi Squared: {reduced_chi:.2f}'
