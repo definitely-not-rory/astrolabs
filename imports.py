@@ -3,6 +3,7 @@ import pandas as pd
 import scipy as sp
 import astropy as astro
 from astropy import time as astrotime
+import matplotlib
 import matplotlib.pyplot as plt
 import os
 import math
@@ -16,6 +17,14 @@ from astroquery.simbad import Simbad
 from astroquery.gaia import Gaia
 plt.rcParams.update({'font.size': 14})
 warnings.filterwarnings("ignore")
+
+import matplotlib.font_manager as font_manager
+plt.rcParams["axes.formatter.use_mathtext"]=True
+plt.rcParams['font.family']='serif'
+cmfont = font_manager.FontProperties(fname=matplotlib.get_data_path() + '/fonts/ttf/cmr10.ttf')
+plt.rcParams['font.serif']=cmfont.get_name()
+plt.rcParams['mathtext.fontset']='cm'
+plt.rcParams['axes.unicode_minus']=False
 
 
 ### Use pre-release version of astroquery
