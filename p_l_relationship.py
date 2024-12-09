@@ -175,23 +175,6 @@ def mean_absolute_deviation(model_params, model, x_data, y_data, npoints):
     print(mad)
     return mad
 
-def sum_square_residuals(model_params, model, x_data, y_data, x_errs, y_errs):
-    points = np.column_stack((x_data,y_data))
-    lp1 = np.array([1,model(1,model_params)])
-    lp2 = np.array([4,model(4,model_params)])
-    
-    d = np.cross(lp2-lp1,points-lp1)/np.linalg.norm(lp2-lp1)
-    
-    theta = np.arctan(model_params[0])
-    
-    epsilon = x_data - d * np.abs(np.cos(theta))
-    eta = y_data - d * np.abs(np.sin(theta))
-    
-    ssr = np.sum((epsilon/x_errs)**2 + (eta/y_errs)**2)
-    
-    print(ssr)
-    return ssr
-
 
 
 def plot_calc(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
@@ -347,72 +330,6 @@ def plot_calc_rm(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, 
     
     return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
 
-def plot_calc_ssr(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
-    
-    objs=next(os.walk('.'))[1]
-    objs = np.array(objs[2:-1])
-    
-    print(bvcorrection)
-    
-    abs_mags = (mags - 3.1 * bvcorrection) - 5*np.log10(dist_pc) + 5
-    
-    abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
-    
-    sort_index = np.argsort(periods)
-    
-    abs_mags = abs_mags[sort_index]
-    periods = periods[sort_index]
-    abs_mags_errs = abs_mags_errs[sort_index]
-    periods_errs = periods_errs[sort_index]
-    objs = objs[sort_index]
-    
-    class outlier:
-        abs_mag= []
-        abs_mag_err = []
-        period = []
-        period_err = []
-        log_period = []
-        log_period_err = []
-        obj = []
-        diff_inerr = []
-        
-    log_periods = np.log10(periods)
-    log_periods_errs = periods_errs/(np.log(10)*periods)
-    
-    initial_values = np.array([-2.117986741266576,-3.644020291235869])
-    
-    print('initial SSR = ', end='') # end='' to not start a new line - value printed by mean_absolute_deviation function
-    initial_ssr = sum_square_residuals(initial_values, fitting_model, periods, abs_mags, periods_errs, abs_mags_errs)
-    
-    fit = sp.optimize.minimize(sum_square_residuals, # the function to minimize
-                              initial_values, # where in 'parameter space' to start from
-                              args=(fitting_model, periods, abs_mags, periods_errs, abs_mags_errs)) # model function and data to use
-                             
-    # Termination output message is fit.message - did the minimisation complete successfully?
-    print(fit.message)
-    
-    print('minimised SSR = {}'.format(fit.fun))
-    ssr_min = sum_square_residuals([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, periods_errs, abs_mags_errs)
-    
-    degrees_of_freedom = periods.size - fit.x.size # Make sure you understand why!
-    print('DoF = {}'.format(degrees_of_freedom))
-    
-    reduced_ssr = ssr_min/degrees_of_freedom
-    print('reduced SSR = {}'.format(reduced_ssr))
-    
-    P_value = sp.stats.chi2.sf(ssr_min, degrees_of_freedom)
-    print('P(SSR, DoF) = {}'.format(P_value))
-    
-    print('Slope: ' + str(fit.x[0]))
-    
-    diff = abs_mags - (fit.x[0]*log_periods + fit.x[1])
-    
-    diff_inerrs = diff/(abs_mags_errs)
-    
-    #outlier.diff_inerr = (outlier.abs_mag - (fit.x[0]*outlier.log_period + fit.x[1]))/outlier.abs_mag_err
-    
-    return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier
-
 
 def jackknifing(abs_mags, abs_mags_errs, periods):
     
@@ -491,47 +408,6 @@ def jackknifing_a(abs_mags, abs_mags_errs, periods):
         print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
-        f.close()
-        
-    return np.array([mean_slope,err_slope]), np.array([mean_offset,err_offset])
-
-def jackknifing_ssr(abs_mags, abs_mags_errs, periods, periods_errs):
-    
-    jackknifed_slopes = []
-    jackknifed_offsets = []
-    
-    for i in range(len(abs_mags)):
-        jackknifed_abs_mags = np.delete(abs_mags,i)
-        jackknifed_abs_mags_errs = np.delete(abs_mags_errs,i)
-        jackknifed_periods = np.delete(periods,i)
-        jackknifed_periods_errs = np.delete(periods_errs,i)
-        initial_values = np.array([-3,1])
-        fit = sp.optimize.minimize(sum_square_residuals,
-                                    initial_values,
-                                    args=(fitting_model, jackknifed_periods, jackknifed_abs_mags, jackknifed_periods_errs, jackknifed_abs_mags_errs))
-        
-        jackknifed_slopes = np.append(jackknifed_slopes,fit.x[0])
-        jackknifed_offsets = np.append(jackknifed_offsets,fit.x[1])
-        
-    mean_slope=np.mean(jackknifed_slopes)
-    mean_offset=np.mean(jackknifed_offsets)
-    
-    err_slope=np.std(jackknifed_slopes)
-    err_offset=np.std(jackknifed_offsets)
-    
-    print("Slope: " + str(mean_slope) + " +/- " + str(err_slope))
-    print("Offset: " + str(mean_offset) + " +/- " + str(err_offset))
-    ssr_min = sum_square_residuals([fit.x[0], fit.x[1]], fitting_model, periods, abs_mags, periods_errs, abs_mags_errs)
-    degrees_of_freedom = len(abs_mags) -2
-    reduced_ssr = ssr_min/degrees_of_freedom
-    
-    with open("PLOutputs.txt","w") as f:
-        print("## All points fitting using Deming Regression ##", file=f)
-        print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
-        print("Offset: " + str(mean_offset) + " +/- " + str(err_offset), file=f)
-        print("Minimised SSR: " + str(ssr_min), file=f)
-        print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
-        print("Reduced SSR: " + str(reduced_ssr), file=f)
         print(" ", file=f)
         f.close()
         
@@ -631,7 +507,7 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     plt.savefig("plrelationship_sans_outliers.png")
     plt.show()
 
-def plot_pl_ssr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky):
+def plot_pl_odr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, beta):
     
     fig, axs = plt.subplots(2,1,height_ratios=(4,3))
     
@@ -649,13 +525,7 @@ def plot_pl_ssr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, di
     axs[0].sharex(axs[1])
     axs[1].set_ylabel("Standard Errors")
     
-    for i in range(len(objs)):
-        axs[0].text(log_periods[i],abs_mags[i],objs[i],size=10)
-        
-    """for i in range(len(outlier.obj)):
-        axs[0].text(outlier.log_period[i],outlier.abs_mag[i],outlier.obj[i],size=10,color="purple")  """               #Outlier
-    
-    axs[0].plot(log_periods, jacky, color='red', label='Our fit')
+    axs[0].plot(log_periods, beta[0]*log_periods+beta[1], color='red', label='Our fit')
     
     """gaia_y = -2.2 * log_periods - 2.05
     
@@ -676,7 +546,7 @@ def plot_pl_ssr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, di
     axs[0].legend(loc='best')
     
     fig.subplots_adjust(hspace=0)
-    plt.savefig("plrelationship_ssr.png")
+    plt.savefig("plrelationship_odr.png")
     print(objs)
     print(len(objs))
     plt.show()
@@ -933,57 +803,23 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.tight_layout()
     plt.show()    
 
-def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, offset):
+def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, offset):
+    def linfunc(p, x):
+            m, c = p
+            return m*x + c
     
-    linslopes = np.linspace(-4,1,1001)
-    linoffsets = np.linspace(-5,0,1001)
+    lin_model = sp.odr.Model(linfunc)
     
-    slopessrs = []
-    offsetssrs = []
+    data = sp.odr.RealData(log_periods, abs_mags, sx=log_periods_errs, sy=abs_mags_errs)
     
-    for linslope in linslopes:
-        
-        def linfunc(x, *param):
-            return linslope*x + param[0]
-        
-        fit = sp.optimize.curve_fit(linfunc, log_periods, abs_mags, sigma=abs_mags_errs, absolute_sigma=True, p0=np.array([-3,1]), check_finite=True, maxfev=10**6)
-        
-        print(fit[0][0])
-        
-        minssr = sum_square_residuals(fit[0][0],linfunc,log_periods,abs_mags,log_periods_errs,abs_mags_errs)
-        
-        slopessrs = np.append(slopessrs,minssr)
+    odr = sp.odr.ODR(data, lin_model, beta0=[slope[0],offset[0]])
     
+    out = odr.run()
     
-    for linoffset in linoffsets:
-        
-        def linfunc(x, *param):
-            return param[0]*x + linoffset
-        
-        fit = sp.optimize.curve_fit(linfunc, log_periods, abs_mags, sigma=abs_mags_errs, absolute_sigma=True, p0=np.array([-3,1]), check_finite=True, maxfev=10**6)
-        
-        minssr = sum_square_residuals(fit[0][0],linfunc,log_periods,abs_mags,log_periods_errs,abs_mags_errs)
-        
-        offsetssrs = np.append(offsetssrs,minssr)
-        
-    plt.plot(linslopes,slopessrs)
-    plt.xlabel("Slope")
-    plt.ylabel("Minimised Sum of Squared Residuals")
-    plt.tight_layout()
-    plt.show()
-    plt.plot(linoffsets,offsetssrs)
-    plt.xlabel("Offset")
-    plt.ylabel("Minimised Sum of Squared Residuals")
-    plt.tight_layout()
-    plt.show()
-    
-    def linfunc(x, *params):
-            return params[0][0]*x + params[0][1]
-        
-    ssr_min = sum_square_residuals([slope[0],offset[0]], linfunc, log_periods, abs_mags, log_periods_errs, abs_mags_errs)
+    sum_square_error_min = out.res_var
     
     extent = 3.5        #Standard Errors
-    n_points = 150      #Mesh Density
+    n_points = 250     #Mesh Density
     
     p0_range = extent * slope[1]
     p1_range = extent * offset[1]
@@ -995,12 +831,9 @@ def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     
     for j, p1_val in enumerate(p1_axis): 
         for i, p0_val in enumerate(p0_axis): # Nested loops for 'clarity'...
-            plot_data[j][i] = sum_square_residuals([p0_val, p1_val], # function evaluated n_points*n_points times!
-                                        linfunc, 
-                                        log_periods, 
-                                        abs_mags,
-                                        log_periods_errs, 
-                                        abs_mags_errs)
+            odr = sp.odr.ODR(data, lin_model, beta0=[p0_val,p1_val], ifixb=[0,0], overwrite=True)
+            out = odr.run()
+            plot_data[j][i] = out.res_var
             
     plt.figure(figsize=(10,8))
     im = plt.imshow(plot_data, # grid of chi-squared values
@@ -1015,7 +848,7 @@ def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     plt.ylabel('Offset')
 
     cbar=plt.colorbar(im, orientation='vertical') # Colorbar and label
-    cbar.set_label('SSR', fontsize=12)
+    cbar.set_label('Residual Variance', fontsize=12)
 
     # Add in best fit point and dashed lines to the axes
     plt.plot(slope[0], offset[0], 'wo') 
@@ -1023,19 +856,19 @@ def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
             linestyle='--', color='w')
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), # horizontal line
             linestyle='--', color='w')
-    plt.savefig("pl_ssr_heatmap_sans_outliers.png")
+    plt.savefig("pl_odr_sse_heatmap.png")
     plt.tight_layout()
     plt.show()
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
-    contour_data = plot_data - ssr_min
+    contour_data = plot_data - sum_square_error_min
 
     levels = [1, 4, 9] # Contour levels in delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard errors
     plt.figure(figsize=(12,8))
 
     #Plot and label contours: (comment out labelling to remove text over contours)
     contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
-    plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$SSR = SSR_{min}+%1.0f$') 
+    plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$RV = RV_{min}+%1.0f$') 
 
     plt.xlabel('Slope') 
     plt.ylabel('Offset')
@@ -1055,9 +888,64 @@ def aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     plt.plot(slope[0], offset[0], 'ro') 
     plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), linestyle='--', color='r')
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
-    plt.savefig("pl_ssr_contour_sans_outliers.png")
+    plt.savefig("pl_odr_sse_contour.png")
     plt.tight_layout()
     plt.show()
+
+
+
+def orthogonal_distance_regression(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror):
+    
+    objs=next(os.walk('.'))[1]
+    objs = np.array(objs[2:-1])
+    
+    print(bvcorrection)
+    
+    abs_mags = (mags - 3.1 * bvcorrection) - 5*np.log10(dist_pc) + 5
+    
+    abs_mags_errs = np.sqrt(((mags_errs**2 + (3.1 * bverror)**2)) + (5*(dist_pc_errs/(np.log(10)*dist_pc)))**2)
+    
+    sort_index = np.argsort(periods)
+    
+    abs_mags = abs_mags[sort_index]
+    periods = periods[sort_index]
+    abs_mags_errs = abs_mags_errs[sort_index]
+    periods_errs = periods_errs[sort_index]
+    objs = objs[sort_index]
+    
+    def log_func(p, x):
+        m, c = p
+        return m*np.log10(x) + c
+    
+    log_model = sp.odr.Model(log_func)
+    
+    data = sp.odr.RealData(periods, abs_mags, sx=periods_errs, sy=abs_mags_errs)
+    
+    odr = sp.odr.ODR(data, log_model, beta0=[-2.17175,3.57509])
+    
+    out = odr.run()
+    
+    out.pprint()
+    
+    log_periods = np.log10(periods)
+    log_periods_errs = periods_errs/(np.log(10)*periods)
+
+    diff = abs_mags - (out.beta[0]*log_periods + out.beta[1])
+    
+    diff_inerrs = diff/(abs_mags_errs)
+    
+    degrees_of_freedom = len(objs) - len(out.beta)
+    
+    with open("PLOutputs.txt","a") as f:
+        print("## Orthogonal Distance Regression Values ##", file=f)
+        print("Slope: " + str(out.beta[0]) + " +/- " + str(out.sd_beta[0]), file=f)
+        print("Offset: " + str(out.beta[1]) + " +/- " + str(out.sd_beta[1]), file=f)
+        print("Minimised Sum of Squares of errors: " + str(out.sum_square), file=f)
+        print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
+        print("Residual Variance: " + str(out.sum_square/degrees_of_freedom), file=f)
+        f.close()
+    
+    return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, out.beta, np.array([out.beta[0],out.sd_beta[0]]), np.array([out.beta[1],out.sd_beta[1]])
 
 
 
@@ -1088,17 +976,14 @@ def pl_gen_sans_outliers():
 
     aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope_array, offset_array)
 
-def pl_gen_ssr():    
+def pl_gen_odr():
     mags, mags_errs, periods, periods_errs = get_periods()
     #dist_pc, dist_pc_errs = get_parallaxes()
     dist_pc, dist_pc_errs, bvcorrection, bverror = read_parallaxes()
-    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier = plot_calc_ssr(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
-    slope_array, offset_array = jackknifing_ssr(abs_mags, abs_mags_errs, periods, periods_errs)
-    jacky = jackgen(slope_array, offset_array, log_periods)
-    plot_pl_ssr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky)
-    aliasing_ssr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope_array, offset_array)
-
+    objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, beta, slope_array, offset_array = orthogonal_distance_regression(mags, mags_errs, periods, periods_errs, dist_pc, dist_pc_errs, bvcorrection, bverror)
+    plot_pl_odr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, beta)
+    aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope_array, offset_array)
 
 pl_gen()
 pl_gen_sans_outliers()
-#pl_gen_ssr()
+pl_gen_odr()
