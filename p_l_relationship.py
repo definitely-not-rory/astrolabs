@@ -360,6 +360,11 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
     degrees_of_freedom = len(abs_mags) -2
     reduced_chi_squared = chi_squared_min/degrees_of_freedom
     
+    sum_squared_errors = np.sum((abs_mags - (mean_slope*np.log10(periods) + mean_offset))**2)
+    total_sum_squared = np.sum(abs_mags**2)
+    
+    r_squared = 1 - sum_squared_errors/total_sum_squared
+    
     with open("PLOutputs.txt","w") as f:
         print("## All points fitting ##", file=f)
         print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
@@ -367,6 +372,7 @@ def jackknifing(abs_mags, abs_mags_errs, periods):
         print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        print("R-squared for fit: " + str(r_squared), file=f)
         print(" ", file=f)
         f.close()
         
@@ -401,6 +407,11 @@ def jackknifing_a(abs_mags, abs_mags_errs, periods):
     degrees_of_freedom = len(abs_mags) -2
     reduced_chi_squared = chi_squared_min/degrees_of_freedom
     
+    sum_squared_errors = np.sum((abs_mags - (mean_slope*np.log10(periods) + mean_offset))**2)
+    total_sum_squared = np.sum(abs_mags**2)
+    
+    r_squared = 1 - sum_squared_errors/total_sum_squared
+    
     with open("PLOutputs.txt","a") as f:
         print("## Fitting parameters sans overfitting points ##", file=f)
         print("Slope: " + str(mean_slope) + " +/- " + str(err_slope), file=f)
@@ -408,6 +419,7 @@ def jackknifing_a(abs_mags, abs_mags_errs, periods):
         print("Minimised Chi-Squared: " + str(chi_squared_min), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Reduced Chi-Squared: " + str(reduced_chi_squared), file=f)
+        print("R-squared for fit: " + str(r_squared), file=f)
         print(" ", file=f)
         f.close()
         
@@ -463,7 +475,6 @@ def plot_pl(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_i
     plt.savefig("plrelationship.png")
     print(objs)
     print(len(objs))
-    plt.show()
     
 def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, outlier, jacky):
     
@@ -505,7 +516,6 @@ def plot_pl_rm(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, dif
     
     fig.subplots_adjust(hspace=0)
     plt.savefig("plrelationship_sans_outliers.png")
-    plt.show()
 
 def plot_pl_odr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, beta):
     
@@ -549,7 +559,7 @@ def plot_pl_odr(objs, abs_mags, abs_mags_errs, log_periods, log_periods_errs, di
     plt.savefig("plrelationship_odr.png")
     print(objs)
     print(len(objs))
-    plt.show()
+    
 
 
 
@@ -590,20 +600,20 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.xlabel("Slope")
     plt.ylabel("Minimised Chi-Squared")
     plt.tight_layout()
-    plt.show()
+    
     plt.plot(linoffsets,offsetchis)
     plt.xlabel("Offset")
     plt.ylabel("Minimised Chi-Squared")
     plt.tight_layout()
-    plt.show()
+    
     
     def linfunc(x, *params):
             return params[0][0]*x + params[0][1]
         
     chi_squared_min = chi_squared([slope[0],offset[0]], linfunc, log_periods, abs_mags, abs_mags_errs)
     
-    extent = 3.5        #Standard Errors
-    n_points = 150      #Mesh Density
+    extent = 3        #Standard Errors
+    n_points = 1000      #Mesh Density
     
     p0_range = extent * slope[1]
     p1_range = extent * offset[1]
@@ -644,7 +654,7 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
             linestyle='--', color='w')
     plt.savefig("pl_chisquared_heatmap.png")
     plt.tight_layout()
-    plt.show()
+    
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
     contour_data = plot_data - chi_squared_min
@@ -676,7 +686,7 @@ def aliasing(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
     plt.savefig("pl_chisquared_contour.png")
     plt.tight_layout()
-    plt.show()
+    
     
 def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     
@@ -715,20 +725,20 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.xlabel("Slope")
     plt.ylabel("Minimised Chi-Squared")
     plt.tight_layout()
-    plt.show()
+    
     plt.plot(linoffsets,offsetchis)
     plt.xlabel("Offset")
     plt.ylabel("Minimised Chi-Squared")
     plt.tight_layout()
-    plt.show()
+    
     
     def linfunc(x, *params):
             return params[0][0]*x + params[0][1]
         
     chi_squared_min = chi_squared([slope[0],offset[0]], linfunc, log_periods, abs_mags, abs_mags_errs)
     
-    extent = 3.5        #Standard Errors
-    n_points = 150      #Mesh Density
+    extent = 3        #Standard Errors
+    n_points = 1000      #Mesh Density
     
     p0_range = extent * slope[1]
     p1_range = extent * offset[1]
@@ -769,7 +779,7 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
             linestyle='--', color='w')
     plt.savefig("pl_chisquared_heatmap_sans_outliers.png")
     plt.tight_layout()
-    plt.show()
+    
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
     contour_data = plot_data - chi_squared_min
@@ -801,7 +811,7 @@ def aliasing_rm(log_periods, abs_mags, abs_mags_errs, slope, offset):
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
     plt.savefig("pl_chisquared_contour_sans_outliers.png")
     plt.tight_layout()
-    plt.show()    
+        
 
 def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, offset):
     def linfunc(p, x):
@@ -817,9 +827,21 @@ def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     out = odr.run()
     
     sum_square_error_min = out.res_var
+    print("Min Res Var: " + str(sum_square_error_min))
     
-    extent = 3.5        #Standard Errors
-    n_points = 250     #Mesh Density
+    
+    """testoffset = np.linspace(offset[0]-10,offset[0]+10,101)
+    testminresvar = []
+    for i in range(101):
+        odr = sp.odr.ODR(data, lin_model, beta0=[slope[0],testoffset[i]],maxit=0)
+        out = odr.run()
+        testminresvar = np.append(testminresvar,out.res_var - sum_square_error_min)
+        
+    plt.plot(testoffset,testminresvar)
+    """
+    
+    extent = 3        #Standard Errors
+    n_points = 1000     #Mesh Density
     
     p0_range = extent * slope[1]
     p1_range = extent * offset[1]
@@ -831,15 +853,16 @@ def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     
     for j, p1_val in enumerate(p1_axis): 
         for i, p0_val in enumerate(p0_axis): # Nested loops for 'clarity'...
-            odr = sp.odr.ODR(data, lin_model, beta0=[p0_val,p1_val], ifixb=[0,0], overwrite=True)
-            out = odr.run()
+            newodr = sp.odr.ODR(data, lin_model, beta0=[p0_val,p1_val], overwrite=True, maxit=0)
+            out = newodr.run()
             plot_data[j][i] = out.res_var
             
     plt.figure(figsize=(10,8))
     im = plt.imshow(plot_data, # grid of chi-squared values
                     extent=(p0_axis[0], p0_axis[-1], # 'x' range
                             p1_axis[0], p1_axis[-1]), # 'y' range
-                    origin='lower', aspect='auto')
+                    origin='lower', aspect='auto',
+                    cmap="YlOrBr_r")
 
     plt.xlim(slope[0]-p0_range, slope[0]+p0_range) # axis ranges
     plt.ylim(offset[0]-p1_range, offset[0]+p1_range)
@@ -848,27 +871,37 @@ def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     plt.ylabel('Offset')
 
     cbar=plt.colorbar(im, orientation='vertical') # Colorbar and label
-    cbar.set_label('Residual Variance', fontsize=12)
+    cbar.set_label('Residual Variance', fontsize=20)
+    
+    import matplotlib.ticker as ticker # Allows you to modify the tick markers to 
+    xtick_spacing = p0_range/4         # assess the errors from the chi-squared 
+    ytick_spacing = p1_range/4         # contour plots - set as appropriate
+    
+    ax = plt.gca()
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(xtick_spacing))
+    ax.xaxis.set_major_formatter('{x:.2f}') # 2 decimal places - may or may not be appropriate!
+
+    ax.yaxis.set_major_locator(ticker.MultipleLocator(ytick_spacing))
+    ax.yaxis.set_major_formatter('{x:.2f}') # 2 decimal places - may or may not be appropriate!
 
     # Add in best fit point and dashed lines to the axes
-    plt.plot(slope[0], offset[0], 'wo') 
+    plt.plot(slope[0], offset[0], color='White', marker='o') 
     plt.plot((slope[0], slope[0]), (p1_axis[0], offset[0]), # vertical line
-            linestyle='--', color='w')
+            linestyle='--', color='White')
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), # horizontal line
-            linestyle='--', color='w')
+            linestyle='--', color='White')
     plt.savefig("pl_odr_sse_heatmap.png")
     plt.tight_layout()
-    plt.show()
     
     X, Y = np.meshgrid(p0_axis, p1_axis, indexing='xy')
     contour_data = plot_data - sum_square_error_min
 
     levels = [1, 4, 9] # Contour levels in delta chi-squared of 1, 4 & 9 correspond to 1, 2 & 3 standard errors
-    plt.figure(figsize=(12,8))
+    plt.figure(figsize=(10,8))
 
     #Plot and label contours: (comment out labelling to remove text over contours)
-    contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='b', origin='lower')
-    plt.clabel(contour_plot, levels, fontsize=12, inline=1, fmt=r'$RV = RV_{min}+%1.0f$') 
+    contour_plot = plt.contour(X, Y, contour_data, levels=levels, colors='Black', origin='lower')
+    plt.clabel(contour_plot, levels, fontsize=18, inline=1, fmt=r'$RV = RV_{min}+%1.0f$') 
 
     plt.xlabel('Slope') 
     plt.ylabel('Offset')
@@ -890,7 +923,6 @@ def aliasing_odr(log_periods, abs_mags, log_periods_errs, abs_mags_errs, slope, 
     plt.plot((p0_axis[0], slope[0]), (offset[0], offset[0]), linestyle='--', color='r')
     plt.savefig("pl_odr_sse_contour.png")
     plt.tight_layout()
-    plt.show()
 
 
 
@@ -936,6 +968,11 @@ def orthogonal_distance_regression(mags, mags_errs, periods, periods_errs, dist_
     
     degrees_of_freedom = len(objs) - len(out.beta)
     
+    sum_square_error = np.sum((abs_mags - (out.beta[0]*np.log10(periods) + out.beta[1]))**2)
+    total_sum_square = np.sum(abs_mags**2)
+    
+    r_squared = 1 - sum_square_error/total_sum_square
+    
     with open("PLOutputs.txt","a") as f:
         print("## Orthogonal Distance Regression Values ##", file=f)
         print("Slope: " + str(out.beta[0]) + " +/- " + str(out.sd_beta[0]), file=f)
@@ -943,6 +980,7 @@ def orthogonal_distance_regression(mags, mags_errs, periods, periods_errs, dist_
         print("Minimised Sum of Squares of errors: " + str(out.sum_square), file=f)
         print("Degrees of Freedom: " + str(degrees_of_freedom), file=f)
         print("Residual Variance: " + str(out.sum_square/degrees_of_freedom), file=f)
+        print("R-squared for fit: " + str(r_squared), file=f)
         f.close()
     
     return objs, periods, abs_mags, abs_mags_errs, log_periods, log_periods_errs, diff_inerrs, out.beta, np.array([out.beta[0],out.sd_beta[0]]), np.array([out.beta[1],out.sd_beta[1]])

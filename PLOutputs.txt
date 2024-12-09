@@ -4,6 +4,7 @@ Offset: -3.575090572242226 +/- 0.13850407560467315
 Minimised Chi-Squared: 759.4074085200498
 Degrees of Freedom: 22
 Reduced Chi-Squared: 34.518518569093175
+R-squared for fit: 0.9675549892938483
  
 ## Fitting parameters sans overfitting points ##
 Slope: -2.649803133996681 +/- 0.12539442674061405
@@ -11,6 +12,7 @@ Offset: -3.204265013947308 +/- 0.11645520497099601
 Minimised Chi-Squared: 605.2105220701881
 Degrees of Freedom: 20
 Reduced Chi-Squared: 30.260526103509402
+R-squared for fit: 0.979122346656044
  
 ## Orthogonal Distance Regression Values ##
 Slope: -2.185826843556329 +/- 0.6780325186542324
@@ -18,3 +20,4 @@ Offset: -3.56288992998759 +/- 0.6308378622667492
 Minimised Sum of Squares of errors: 757.9120351467659
 Degrees of Freedom: 22
 Residual Variance: 34.45054705212572
+R-squared for fit: 0.9675841042260924
