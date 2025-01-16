@@ -1,0 +1,17 @@
+
+vx_cyg
+Literature Period: 20.133407
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 19.963400633693524
+Errors from chisq: -0.12143999999540256,+0.12064999999543247
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.25028522489902844
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06249524959750019,+0.36106831798552363
+Reduced chisq of Fourier Decomposition: 3.940661788455993
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 19.963400633693524
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.25028522489902844
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06249524959750019,+0.36106831798552363
+Reduced chisq of Fourier Decomposition: 1.4387485985872053
+delta chisq=-2.5019131898687874
+Average Magnitude: 9.863006250000002pm0.13137468578947833

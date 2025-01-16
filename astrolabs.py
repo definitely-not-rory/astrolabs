@@ -10,7 +10,10 @@ from modes_plot import *
 from overfitting import *
 from chionobs import *
 from periodperiod import *
+from new_fourier import *
 from aperture_photometry_plot import *
+from generate_periodmagfile import *
+from p_l_relationship import *
 
 
 df = pd.read_csv('mcmaster.txt')
@@ -19,7 +22,7 @@ arrays=df.to_numpy()
 
 objs=next(os.walk('.'))[1]
 
-objs=objs[2:-1]
+objs=objs[3:-1]
 
 periods=[]
 
@@ -29,8 +32,12 @@ for j in objs:
             periods.append(i[1])
 
     
+#gen_pmf(objs,periods)
+#pl_gen()
+
 
 #plot_fourier_grid(objs,periods,True)
+
 
 obj=input('Select Cepheid: ')
 
@@ -45,7 +52,8 @@ lower_bound=period/1.2
 
 if obj in objs:
     print('~~~ '+obj+' ~~~\nLiterature Period Value: '+str(period))
-    fourier_fitting(obj,period,2,5,True,False,20)
+    new_fourier(obj,period)
+    
 else:
     print('This object does not exist')
 
@@ -54,8 +62,6 @@ else:
 '''
 RORY TO DO:
 
-take median zpt error as min mag error
-
 change folded axes to phase
 color corrected vs raw mags
 plot turning points as func of time
@@ -63,8 +69,6 @@ fix color plot bins and axes
 
 biggest gaps in min and max fit vs data
 then plot min/max difference on biggest diff in sampling in phase
-
-
 
 MCMC
 

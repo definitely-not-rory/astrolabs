@@ -1,0 +1,410 @@
+
+ak_cep
+Literature Period: 7.23268
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 7.318077883736535
+Errors from chisq: -0.006699999999746353,+0.006639999999748625
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.06796821579122468
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.02424062020595752,+0.009477591481641845
+Reduced chisq of Fourier Decomposition: 46.66181112079381
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 7.348699638357691
+Errors from chisq: -0.036229999998628415,+0.03367999999872495
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.04595203582173331
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.03523034840631212,+0.03815189356174287
+Reduced chisq of Fourier Decomposition: 49.64357696680061
+delta chisq=2.9817658460068017
+Average Magnitude: 10.804187500000001pm0.09491859551947977
+
+cd_cas
+Literature Period: 7.80089
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 7.74818441387202
+Errors from chisq: -0.021519999999185302,+0.021319999999192873
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.05079970938955211
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.05591196578993429,+0.017371372335030166
+Reduced chisq of Fourier Decomposition: 31.918656498674423
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 7.819443969403032
+Errors from chisq: -0.031229999998817703,+0.030809999998833604
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.0419367883675953
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.04917894025003111,+0.019802369283389076
+Reduced chisq of Fourier Decomposition: 24.68681156594483
+delta chisq=-7.231844932729594
+Average Magnitude: 10.64808125pm0.07484205618312638
+
+cf_cas
+Literature Period: 4.87522
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 4.913920646781493
+Errors from chisq: -0.02170999999917811,+0.019709999999253824
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.020316614025031755
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.02631575863820501,+0.01633043201503437
+Reduced chisq of Fourier Decomposition: 3.2092536774427467
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 4.913153998793606
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.023529266469080354
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0398096853925658,+0.006605664549340418
+Reduced chisq of Fourier Decomposition: 0.7294540922105399
+delta chisq=-2.4797995852322066
+Average Magnitude: 11.077943750000001pm0.07823883568238708
+
+
+
+cg_cas
+Literature Period: 4.36554
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 4.289746069996564
+Errors from chisq: -0.007919999999700167,+0.009509999999639973
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.03612533362341446
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.05721099261300999,+0.021119911356801246
+Reduced chisq of Fourier Decomposition: 3.295426136632399
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 4.384562776549102
+Errors from chisq: -0.010549999999600601,+0.010029999999620287
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.003521373845784452
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0008852101006340263,+0.005020191203637836
+Reduced chisq of Fourier Decomposition: 3.498324237192719
+delta chisq=0.20289810056031987
+Average Magnitude: 11.515753125pm0.061932797271147
+
+ch_cas
+Literature Period: 15.08619
+Maximum Number of Fourier Modes Used in Full Decomposition: 3
+Fourier Decomposition Period: 15.090127339102006
+Errors from chisq: -0.0007399999999719853,+0.0007299999999723639
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.000607860553061919
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.00024090696575740367,+0.000649998895557502
+Reduced chisq of Fourier Decomposition: 7.6130428414103815
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 15.092613187929816
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.03984502714337714
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0009827799854136288,+0.07385974138270512
+Reduced chisq of Fourier Decomposition: 13.573698381885716
+delta chisq=5.960655540475335
+Average Magnitude: 10.817275pm0.07659310367007463
+
+cp_cep
+Literature Period: 17.859
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 17.483724203163778
+Errors from chisq: -0.06762999999743968,+0.0683399999974128
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.2623288493682379
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.10266904641848029,+0.013875446360156474
+Reduced chisq of Fourier Decomposition: 1.9500027198066872
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 18.15183019549194
+Errors from chisq: -0.0716499999972875,+0.07507999999715764
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.2783115911002768
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06938539300604063,+0.5333670228521541
+Reduced chisq of Fourier Decomposition: 11.540851544363203
+delta chisq=9.590848824556517
+Average Magnitude: 10.739075pm0.08989421622709652
+
+cy_cas
+Literature Period: 14.37686
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 14.242914068021669
+Errors from chisq: -0.053369999997979534,+0.05194999999803329
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.16956733458995008
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.22579238124244405,+0.03460981775819327
+Reduced chisq of Fourier Decomposition: 8.597299388485592
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 14.242914068021669
+Errors from chisq: -0.04960999999812188,+0.048379999998168444
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.16956733458995008
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.22579238124244405,+0.03460981775819327
+Reduced chisq of Fourier Decomposition: 8.462747443788242
+delta chisq=-0.13455194469734977
+Average Magnitude: 11.743175pm0.1168017406268604
+
+cz_cas
+Literature Period: 5.66438
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 5.6771195883853744
+Errors from chisq: -0.03581999999864394,+0.029499999998883197
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.02798384527351773
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.011192799811232668,+0.008025246394549157
+Reduced chisq of Fourier Decomposition: 1.8302064613845506
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 5.658000360101168
+Errors from chisq: -0.023629999999105422,+0.02248999999914858
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.033117797612868406
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.007639604536692879,+0.0018975179048856816
+Reduced chisq of Fourier Decomposition: 0.9743146510798423
+delta chisq=-0.8558918103047083
+Average Magnitude: 11.92475pm0.09018480667755935
+
+dd_cas
+Literature Period: 9.812027
+Maximum Number of Fourier Modes Used in Full Decomposition: 4
+Fourier Decomposition Period: 9.812909824481084
+Errors from chisq: -0.0008799999999666852,+0.0009199999999651709
+Errors from Jackkinfing Assuming Gaussian Distribution: 7.420794081836827e-05
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -3.477179449262735e-05,+4.8184403878437365e-05
+Reduced chisq of Fourier Decomposition: 1.4190933812398663
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 9.813065705459104
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.00019013594223914177
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -7.330816148964914e-05,+6.169923599941285e-05
+Reduced chisq of Fourier Decomposition: 1.6664759659770634
+delta chisq=0.2473825847371971
+Average Magnitude: 10.356590624999999pm0.03403867174570505
+
+kk_cas
+Literature Period: 8.19165
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 8.196835615304547
+Errors from chisq: -0.02247999999914896,+0.02311999999912473
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.05954839019537134
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06098853884554245,+0.07086409417111916
+Reduced chisq of Fourier Decomposition: 2.7286154385933368
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 8.196835615304547
+Errors from chisq: -0.02058999999922051,+0.021129999999200066
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.05954839019537134
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06098853884554245,+0.07086409417111916
+Reduced chisq of Fourier Decomposition: 2.565464736904261
+delta chisq=-0.16315070168907564
+Average Magnitude: 12.035425pm0.06820595184019224
+
+kx_cyg
+Literature Period: 20.0467
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 19.965886952671966
+Errors from chisq: -0.14674999999444438,+0.15603999999409268
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.21249560951784757
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.08471765683456667,+0.1763177168619201
+Reduced chisq of Fourier Decomposition: 8.93755918284009
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 20.06471753362588
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.5883079115566717
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.3259836117821564,+0.18458926255086183
+Reduced chisq of Fourier Decomposition: 0.3678829773059243
+delta chisq=-8.569676205534165
+Average Magnitude: 12.120887499999998pm0.1073166431873772
+
+rw_cas
+Literature Period: 14.7949
+Maximum Number of Fourier Modes Used in Full Decomposition: 3
+Fourier Decomposition Period: 15.07090785893407
+Errors from chisq: -0.033759999998721923,+0.034549999998692016
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.17557134459562207
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.1624686906546131,+0.12445041734067885
+Reduced chisq of Fourier Decomposition: 8.55616992272819
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 15.09893776344807
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.17161100483037847
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.125084071664336,+0.023300065994364516
+Reduced chisq of Fourier Decomposition: 10.013515386733067
+delta chisq=1.4573454640048773
+Average Magnitude: 9.4248pm0.10391913136565324
+
+ry_cas
+Literature Period: 12.13726
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 12.133095060160459
+Errors from chisq: -0.03407999999870981,+0.0337499999987223
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.030519112927926126
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.007840724075199645,+0.015975306535096934
+Reduced chisq of Fourier Decomposition: 16.62980169056688
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 12.421253251964524
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.19863838896470465
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.2727101034145285,+0.0212267024238173
+Reduced chisq of Fourier Decomposition: 8.559239691890685
+delta chisq=-8.070561998676194
+Average Magnitude: 9.875525pm0.062368132600428505
+
+sw_cas
+Literature Period: 5.44095
+Maximum Number of Fourier Modes Used in Full Decomposition: 4
+Fourier Decomposition Period: 5.4375968308167515
+Errors from chisq: -0.001159999999956085,+0.0012599999999522993
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.0002938150978899077
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.00023688628865681238,+0.00028310204106229975
+Reduced chisq of Fourier Decomposition: 3.1527002148913
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 5.438487595653844
+Errors from chisq: -0.001939999999926556,+0.001959999999925799
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.00035156018442671565
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.00018338074690493755,+0.00025854627131405294
+Reduced chisq of Fourier Decomposition: 3.7241610644866725
+delta chisq=0.5714608495953724
+Average Magnitude: 9.5230375pm0.05229273058747609
+
+sz_cas
+Literature Period: 13.63289
+Maximum Number of Fourier Modes Used in Full Decomposition: 4
+Fourier Decomposition Period: 13.619888676970856
+Errors from chisq: -0.018449999999301525,+0.01776999999932727
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.004529727762218591
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0035091118299650503,+0.0036710223122913277
+Reduced chisq of Fourier Decomposition: 3.2890019663520196
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 13.625287858802688
+Errors from chisq: -0.03126999999881619,+0.027509999998958534
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.002754673957545648
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.00182282756646579,+0.0015679484888089235
+Reduced chisq of Fourier Decomposition: 3.080603495036891
+delta chisq=-0.20839847131512856
+Average Magnitude: 9.898177777777779pm0.026301325443812973
+
+v1467_cyg
+Literature Period: 48.6
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 43.882129559378555
+Errors from chisq: -0.7053200002238782,+0.741830000235467
+Errors from Jackkinfing Assuming Gaussian Distribution: 1.9065297018287082
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.26445040625875293,+2.295949564542596
+Reduced chisq of Fourier Decomposition: 5.672691986938893
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 43.882129559378555
+Errors from chisq: -0.7053200002238782,+0.741830000235467
+Errors from Jackkinfing Assuming Gaussian Distribution: 1.9065297018287082
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.26445040625875293,+2.295949564542596
+Reduced chisq of Fourier Decomposition: 5.672691986938893
+delta chisq=0.0
+Average Magnitude: 13.614350000000002pm0.0983116278511541
+
+v342_cas
+Literature Period: 3.91989
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 3.9437035262036217
+Errors from chisq: -0.005870000000038456,+0.006300000000041273
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.023758699275086802
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.008585878298438043,+0.03834512584486616
+Reduced chisq of Fourier Decomposition: 5.703125538133834
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 3.926727392605137
+Errors from chisq: -0.0070400000000461205,+0.007030000000046055
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.02430995686933109
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.004199810235364865,+0.036249941462922486
+Reduced chisq of Fourier Decomposition: 5.617661131622843
+delta chisq=-0.08546440651099108
+Average Magnitude: 12.05125625pm0.045498729408840324
+
+v396_cyg
+Literature Period: 33.247
+Maximum Number of Fourier Modes Used in Full Decomposition: 3
+Fourier Decomposition Period: 33.25645352687887
+Errors from chisq: -0.004100000001301396,+0.003910000001241087
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.0022939911925155096
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0010957043801980149,+0.0004773693563180359
+Reduced chisq of Fourier Decomposition: 4.897860163692788
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 33.264909416015314
+Errors from chisq: -1.0000000003174137e-05,+1.0000000003174137e-05
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.005758734840121688
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.002901009099382179,+0.0019414731302376254
+Reduced chisq of Fourier Decomposition: 5.6882130393915356
+delta chisq=0.7903528756987477
+Average Magnitude: 11.736337500000001pm0.07066292785588663
+
+v407_cas
+Literature Period: 4.5845526
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 4.576983097354307
+Errors from chisq: -0.012029999999544572,+0.01363999999948362
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.006329712200348916
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0069556954032750085,+0.004894741561900062
+Reduced chisq of Fourier Decomposition: 1.917472836042169
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 4.576983097354307
+Errors from chisq: -0.011889999999549872,+0.013449999999490814
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.006329712200348916
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0069556954032750085,+0.004894741561900062
+Reduced chisq of Fourier Decomposition: 1.8918658008544669
+delta chisq=-0.02560703518770202
+Average Magnitude: 11.999675pm0.04385763257340477
+
+v532_cyg
+Literature Period: 3.283612
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 3.2946668028932358
+Errors from chisq: -0.012200000000079925,+0.010290000000067412
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.009181985617260498
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0039480711756674225,+0.0031035942211667944
+Reduced chisq of Fourier Decomposition: 1.6644263297702149
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 3.2881867503010573
+Errors from chisq: -0.009940000000065119,+0.009940000000065119
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.0031330958475268137
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.0028895731526770163,+0.002140516068486864
+Reduced chisq of Fourier Decomposition: 1.0514446456064666
+delta chisq=-0.6129816841637483
+Average Magnitude: 9.273825pm0.039988713471540295
+
+v538_cyg
+Literature Period: 6.118961
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 6.154806184084035
+Errors from chisq: -0.014729999999442356,+0.014429999999453713
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.00945816782904062
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.007376814214748784,+0.010363728723885579
+Reduced chisq of Fourier Decomposition: 1.0157211027126622
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 6.2517879863432
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.06544371401845117
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.01745881136690297,+0.115385775221438
+Reduced chisq of Fourier Decomposition: 1.1613289687438229
+delta chisq=0.1456078660311606
+Average Magnitude: 10.5012625pm0.05716868485321632
+
+v609_cyg
+Literature Period: 31.072
+Maximum Number of Fourier Modes Used in Full Decomposition: 1
+Fourier Decomposition Period: 31.454566642338428
+Errors from chisq: -0.4424299999832506,+0.4543799999827982
+Errors from Jackkinfing Assuming Gaussian Distribution: 2.697658849583135
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -1.069472118681098,+3.305449326550658
+Reduced chisq of Fourier Decomposition: 149.96047569292736
+Fourier Coefficients Used in Bimodal Model: 2, 3
+Bimodal Period: 25.893333333333352
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 2.651124165704882
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -3.39822367431368,+2.1011916951165404
+Reduced chisq of Fourier Decomposition: 5.0776267396989985
+delta chisq=-144.88284895322838
+Average Magnitude: 10.987512500000001pm0.154855096728971
+
+v621_cyg
+Literature Period: 5.864
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 5.819965373689475
+Errors from chisq: -0.011659999999558579,+0.012899999999511635
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.03344413726900806
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.020045635472987655,+0.03112478998870838
+Reduced chisq of Fourier Decomposition: 3.408348597953914
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 5.819965373689475
+Errors from chisq: -0.008329999999684645,+0.008939999999661552
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.03344413726900806
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.020045635472987655,+0.03112478998870838
+Reduced chisq of Fourier Decomposition: 2.9063479369332432
+delta chisq=-0.5020006610206709
+Average Magnitude: 11.6704pm0.09991055785692016
+
+vx_cyg
+Literature Period: 20.133407
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 19.963400633693524
+Errors from chisq: -0.12143999999540256,+0.12064999999543247
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.25028522489902844
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06249524959750019,+0.36106831798552363
+Reduced chisq of Fourier Decomposition: 3.940661788455993
+Fourier Coefficients Used in Bimodal Model: 2, 4
+Bimodal Period: 19.963400633693524
+Errors from chisq: -9.999999999621423e-06,+9.999999999621423e-06
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.25028522489902844
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.06249524959750019,+0.36106831798552363
+Reduced chisq of Fourier Decomposition: 1.4387485985872053
+delta chisq=-2.5019131898687874
+Average Magnitude: 9.863006250000002pm0.13137468578947833

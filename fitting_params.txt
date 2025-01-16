@@ -1,0 +1,1 @@
+obj lit_period max_modes max_period max_chi n1 n2 bimodal_period bimodal_errs bimodal_chi

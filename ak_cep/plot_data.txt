@@ -1,0 +1,18 @@
+ak_cep
+Literature Period: 7.23268
+Maximum Number of Fourier Modes Used in Full Decomposition: 2
+Fourier Decomposition Period: 7.318077883736535
+Errors from chisq: -0.006699999999746353,+0.006639999999748625
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.06796821579122468
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.02424062020595752,+0.009477591481641845
+Reduced chisq of Fourier Decomposition: 46.66181112079381
+
+Fourier Coefficients Used in Bimodal Model: 2, 5
+Bimodal Period: 7.348699638357691
+Errors from chisq: -0.036229999998628415,+0.03367999999872495
+Errors from Jackkinfing Assuming Gaussian Distribution: 0.04595203582173331
+Errors from Jackknifing Assuming Non-Gaussian Distribution: -0.03523034840631212,+0.03815189356174287
+Reduced chisq of Fourier Decomposition: 49.64357696680061
+
+delta chisq=2.9817658460068017
+Average Magnitude: 10.804187500000001pm0.09491859551947977

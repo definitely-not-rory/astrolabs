@@ -1,5 +1,4 @@
 from imports import *
-plt.rcParams.update({'font.size': 22})
 
 df = pd.read_csv("./.gaussian_spread_data/results.diff",delimiter=" ")
 
@@ -21,8 +20,8 @@ plt.show()
 
 plt.figure(figsize=(8,6), dpi=200)
 plt.xlim([xmin,(mean + (mean-xmin))])
-plt.hist(mags, bins=100)
-plt.plot(x, y)
+plt.hist(mags, bins=100,color='b')
+plt.plot(x, y,c='r',linestyle='dashed')
 plt.xlabel("Apparent magnitude of TYC 4502-724-1")
 plt.ylabel("Counts per bin")
 plt.tight_layout()
